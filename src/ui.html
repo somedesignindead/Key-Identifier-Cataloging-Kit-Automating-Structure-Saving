@@ -1,0 +1,7873 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<style>
+*{box-sizing:border-box}
+
+:root{
+  --panel:var(--figma-color-bg-secondary,#f7f7f7);
+  --border:var(--figma-color-border,#ddd);
+  --text2:var(--figma-color-text-secondary,#666);
+  --brand:var(--figma-color-bg-brand,#1769e0);
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  overflow-y:auto;
+  overflow-x:hidden;
+  font:12px/1.45 Inter,system-ui,sans-serif;
+  background:var(--figma-color-bg,#fff);
+  color:var(--figma-color-text,#202124);
+}
+
+.app{
+  min-height:100vh;
+  display:block;
+}
+
+.main{
+  width:calc(100% - 300px);
+  min-width:0;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  padding:18px 18px 14px;
+  border-right:1px solid var(--border);
+}
+
+.results{
+  position:fixed;
+  top:0;
+  right:0;
+  bottom:0;
+  width:300px;
+  height:100vh;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  padding:18px 14px;
+  background:var(--panel);
+  border-left:1px solid var(--border);
+  overflow:hidden;
+}
+
+h1{
+  margin:0;
+  font-size:20px;
+  line-height:1.2;
+  letter-spacing:-.35px;
+}
+
+h2{
+  margin:0;
+  font-size:14px;
+}
+
+.muted,.hint{
+  color:var(--text2);
+}
+
+.hint{
+  margin:6px 0 0;
+  font-size:11px;
+}
+
+.selection-block{
+  margin-top:14px;
+}
+
+.selection-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:6px;
+}
+
+#selection{
+  font-weight:600;
+}
+
+#selection-list{
+  margin:0;
+  padding:0;
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+  color:var(--text2);
+}
+
+.selection-item{
+  display:inline-flex;
+  align-items:center;
+  max-width:100%;
+  padding:4px 7px;
+  border-radius:5px;
+  background:var(--figma-color-bg-secondary,#f3f3f3);
+  color:var(--figma-color-text-secondary,#666);
+  font-size:11px;
+  line-height:1.35;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  transition:
+    background .12s ease,
+    color .12s ease;
+}
+
+.selection-item:hover{
+  background:var(--figma-color-bg-brand-tertiary,#e8f0ff);
+  color:var(--figma-color-text-brand,#1769e0);
+}
+
+fieldset{
+  border:0;
+  padding:0;
+  margin:0;
+  min-width:0;
+}
+
+#settings{
+  overflow:visible;
+  flex:none;
+  min-height:0;
+  padding-right:5px;
+  margin-top:3px;
+}
+
+.option-block{
+  margin:14px 0;
+}
+
+.option-title{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-weight:600;
+  margin-bottom:7px;
+}
+
+.radio-row{
+  display:flex;
+  gap:7px;
+}
+
+.radio{
+  position:relative;
+  flex:1;
+}
+
+.radio input{
+  position:absolute;
+  opacity:0;
+  pointer-events:none;
+}
+
+.radio span{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:34px;
+  padding:7px 10px;
+  border:1px solid var(--border);
+  border-radius:7px;
+  cursor:pointer;
+  user-select:none;
+}
+
+.radio input:checked+span{
+  border-color:var(--figma-color-border-brand,#1769e0);
+  background:var(--figma-color-bg-brand-tertiary,#eef4ff);
+  color:var(--figma-color-text-brand,#1769e0);
+  font-weight:600;
+}
+
+.radio input:disabled+span{
+  opacity:.4;
+  cursor:default;
+}
+
+.check{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  cursor:pointer;
+}
+
+.check input[type="checkbox"]{
+  appearance:none;
+  -webkit-appearance:none;
+  position:relative;
+  width:15px;
+  height:15px;
+  flex:0 0 15px;
+  margin:0;
+  border:1px solid var(--figma-color-border-strong,#9a9a9a);
+  border-radius:4px;
+  background:#fff;
+  cursor:pointer;
+}
+
+.check input[type="checkbox"]:checked{
+  border-color:var(--brand);
+  background:var(--brand);
+}
+
+.check input[type="checkbox"]:checked::after{
+  content:"";
+  position:absolute;
+  left:4px;
+  top:1px;
+  width:4px;
+  height:8px;
+  border:solid #fff;
+  border-width:0 2px 2px 0;
+  transform:rotate(45deg);
+}
+
+.check input[type="checkbox"]:disabled{
+  opacity:.45;
+  cursor:default;
+}
+
+.panel{
+  padding:12px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  margin:14px 0;
+}
+
+.panel-title{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-weight:600;
+  margin-bottom:7px;
+}
+
+.print-row{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr);
+  align-items:center;
+  gap:8px;
+  margin-top:9px;
+}
+
+.print-row.three{
+  grid-template-columns:auto minmax(0,1fr) auto;
+}
+
+.print-label{
+  display:flex;
+  align-items:center;
+  gap:5px;
+}
+
+.print-row input[type=text],
+.print-row input[type=number]{
+  width:100%;
+  min-width:0;
+  height:30px;
+  padding:5px 8px;
+  border:1px solid var(--border);
+  border-radius:6px;
+  background:var(--figma-color-bg,#fff);
+  color:inherit;
+  font:inherit;
+}
+
+.print-unit{
+  color:var(--text2);
+  font-size:11px;
+}
+
+.print-sub{
+  margin-left:24px;
+}
+
+input[type=file]{
+  max-width:100%;
+  margin-top:9px;
+  font:inherit;
+}
+
+.help{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:16px;
+  height:16px;
+  flex:0 0 16px;
+  border:1px solid var(--border);
+  border-radius:50%;
+  color:var(--text2);
+  font-size:10px;
+  font-weight:700;
+  cursor:help;
+  user-select:none;
+}
+
+.help::after{
+  content:attr(data-tip);
+  position:absolute;
+  z-index:9999;
+  left:calc(100% + 8px);
+  top:50%;
+  bottom:auto;
+  width:260px;
+  padding:8px 10px;
+  border-radius:7px;
+  background:#202124;
+  color:#fff;
+  font-size:11px;
+  line-height:1.4;
+  font-weight:400;
+  white-space:normal;
+  box-shadow:0 4px 18px rgba(0,0,0,.22);
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transform:translateY(-50%) translateX(-3px);
+  transition:.12s ease;
+}
+
+.help:hover::after,
+.help:focus::after{
+  opacity:1;
+  visibility:visible;
+  transform:translateY(-50%) translateX(0);
+}
+
+button,
+a.download{
+  font:inherit;
+  border:1px solid var(--border);
+  border-radius:7px;
+  padding:8px 12px;
+  background:var(--figma-color-bg,#fff);
+  color:inherit;
+  cursor:pointer;
+  text-decoration:none;
+}
+
+button:disabled{
+  opacity:.45;
+  cursor:default;
+}
+
+button.primary{
+  flex:1;
+  background:var(--brand);
+  color:var(--figma-color-text-onbrand,#fff);
+  border-color:transparent;
+  font-weight:600;
+}
+
+button.danger{
+  color:var(--figma-color-text-danger,#c22);
+}
+
+button.merge{
+  width:100%;
+  font-weight:600;
+  border-color:var(--figma-color-border-brand,#1769e0);
+  color:var(--figma-color-text-brand,#1769e0);
+}
+
+.converter-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px;
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  flex-shrink:0;
+  margin-top:12px;
+}
+
+#status{
+  min-height:18px;
+  margin:9px 0 0;
+  flex-shrink:0;
+}
+
+.error{
+  color:var(--figma-color-text-danger,#c22)!important;
+}
+
+.results-head{
+  margin-bottom:10px;
+  flex:0 0 auto;
+}
+
+.results-head-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
+
+.clear-downloads{
+  padding:5px 8px;
+  font-size:11px;
+}
+
+.download-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  gap:6px;
+}
+
+.download-row .download{
+  min-width:0;
+}
+
+.download-delete{
+  padding:7px 8px;
+  color:var(--figma-color-text-danger,#c22);
+}
+
+#downloads-empty{
+  padding:24px 12px;
+  text-align:center;
+  color:var(--text2);
+  border:1px dashed var(--border);
+  border-radius:8px;
+}
+
+#downloads{
+  display:grid;
+  align-content:start;
+  gap:7px;
+  flex:1 1 auto;
+  overflow-y:auto;
+  overflow-x:hidden;
+  min-height:0;
+  padding-right:2px;
+}
+
+a.download{
+  display:block;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  background:var(--figma-color-bg,#fff);
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+.help:focus-visible{
+  outline:2px solid var(--figma-color-border-brand,#1769e0);
+  outline-offset:2px;
+}
+
+.modal{
+  position:fixed;
+  z-index:100;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:rgba(0,0,0,.45);
+}
+
+.modal-card{
+  width:min(560px,100%);
+  max-height:90vh;
+  overflow:auto;
+  padding:18px;
+  border-radius:10px;
+  background:var(--figma-color-bg,#fff);
+  box-shadow:0 10px 40px rgba(0,0,0,.3);
+}
+
+.modal-card h2{
+  margin-bottom:12px;
+}
+
+.modal-card h3{
+  margin:14px 0 6px;
+  font-size:12px;
+}
+
+.modal-card pre{
+  margin:6px 0;
+  padding:9px;
+  overflow:auto;
+  border-radius:7px;
+  background:var(--panel);
+  font:11px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;
+  white-space:pre-wrap;
+}
+
+.modal-actions{
+  display:flex;
+  justify-content:flex-end;
+  margin-top:14px;
+}
+
+[hidden]{
+  display:none!important;
+}
+
+/* ==========================================================
+   Main tabs / Edit UI
+   ========================================================== */
+
+/* Exact top-tab icon sizing from Figma reference */
+.main-tab-icon{
+  width:15px;
+  height:15px;
+  flex:none;
+  display:block;
+}
+
+.main-tab-icon.layers{
+  width:18px;
+  height:15px;
+}
+
+.main-tab-icon svg{
+  display:block;
+  width:100%;
+  height:100%;
+  overflow:visible;
+}
+
+.main-tab-button.active:hover{
+  background:#245679;
+  color:#fff;
+  box-shadow:0 4px 4px rgba(0,0,0,.25);
+}
+
+
+.main-tabs{
+  display:flex;
+  align-items:flex-start;
+  gap:15px;
+  height:33px;
+  margin-top:14px;
+  padding:0 4px;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  overflow:visible;
+}
+
+.main-tab-button{
+  flex:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  min-width:0;
+  height:25px;
+  min-height:25px;
+  padding:0 10px;
+  border:0;
+  border-radius:10px;
+  background:#EAEAEA;
+  color:#000;
+  font:400 12px/1 Inter,system-ui,sans-serif;
+  cursor:pointer;
+  white-space:nowrap;
+  box-shadow:0 4px 4px rgba(0,0,0,.25);
+  transition:none;
+}
+
+.main-tab-button:hover{
+  background:#EAEAEA;
+  color:#504F4F;
+  box-shadow:
+    inset 0 1px 1px rgba(0,0,0,.25);
+}
+
+.main-tab-button.active{
+  background:#245679;
+  color:#fff;
+  box-shadow:0 4px 4px rgba(0,0,0,.25);
+}
+
+.app.edit-mode .main{
+  width:100%;
+  border-right:0;
+}
+
+.app.edit-mode .results{
+  display:none;
+}
+
+.edit-tab{
+  margin-top:14px;
+  padding-bottom:18px;
+}
+
+.edit-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  gap:12px;
+}
+
+.edit-card{
+  padding:14px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  background:var(--figma-color-bg,#fff);
+}
+
+.edit-card-title{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:12px;
+}
+
+.edit-card-title h2{
+  margin:0;
+}
+
+.edit-row{
+  display:grid;
+  grid-template-columns:160px minmax(0,1fr);
+  align-items:center;
+  gap:10px;
+  margin-top:9px;
+}
+
+.edit-row.top{
+  align-items:start;
+}
+
+.edit-row > label:first-child,
+.edit-label{
+  color:var(--figma-color-text-secondary,#666);
+}
+
+.edit-row input[type="text"],
+.edit-row input[type="number"],
+.edit-row select,
+.edit-textarea{
+  width:100%;
+  min-width:0;
+}
+
+.edit-textarea{
+  min-height:62px;
+  resize:vertical;
+  padding:7px 8px;
+  border:1px solid var(--border);
+  border-radius:6px;
+  background:var(--figma-color-bg,#fff);
+  color:var(--figma-color-text,#202124);
+  font:inherit;
+}
+
+.edit-two{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:8px;
+}
+
+.edit-three{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 90px 70px;
+  gap:8px;
+}
+
+.edit-checks{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px 14px;
+  margin-top:10px;
+}
+
+.edit-checks .check{
+  margin:0;
+}
+
+.edit-subsection{
+  margin-top:12px;
+  padding-top:12px;
+  border-top:1px solid var(--border);
+}
+
+.edit-subtitle{
+  margin-bottom:8px;
+  font-weight:600;
+}
+
+.edit-preview{
+  margin-top:12px;
+  padding:10px;
+  min-height:45px;
+  border:1px solid var(--border);
+  border-radius:7px;
+  background:var(--figma-color-bg-secondary,#f7f7f7);
+  color:var(--figma-color-text-secondary,#666);
+  font-size:11px;
+}
+
+.edit-preview strong{
+  color:var(--figma-color-text,#202124);
+}
+
+.edit-preview-example{
+  margin-top:6px;
+  padding-top:6px;
+  border-top:1px solid var(--border);
+  overflow-wrap:anywhere;
+}
+
+.edit-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:12px;
+}
+
+.token-row{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:5px;
+  margin-top:5px;
+}
+
+.token-button{
+  min-width:28px;
+  min-height:25px;
+  padding:3px 7px;
+  border:1px solid var(--border);
+  border-radius:5px;
+  background:var(--figma-color-bg,#fff);
+  color:var(--figma-color-text,#202124);
+  font:inherit;
+  cursor:pointer;
+}
+
+.token-button:hover{
+  background:var(--figma-color-bg-hover,#eee);
+}
+
+.anchor-grid{
+  display:grid;
+  grid-template-columns:repeat(3,36px);
+  grid-template-rows:repeat(3,36px);
+  gap:4px;
+  width:max-content;
+}
+
+.anchor-button{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:36px;
+  height:36px;
+  padding:0;
+  border:1px solid var(--border);
+  border-radius:6px;
+  background:var(--figma-color-bg,#fff);
+  color:var(--figma-color-text-secondary,#666);
+  font:16px/1 system-ui,sans-serif;
+  cursor:pointer;
+}
+
+.anchor-button:hover{
+  background:var(--figma-color-bg-hover,#eee);
+}
+
+.anchor-button.active{
+  border-color:var(--brand);
+  background:var(--figma-color-bg-brand-tertiary,#e8f0ff);
+  color:var(--figma-color-text-brand,#1769e0);
+}
+
+.edit-note{
+  margin:8px 0 0;
+  color:var(--figma-color-text-secondary,#666);
+  font-size:11px;
+}
+
+@media (min-width:900px){
+  .edit-grid.two-cards{
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  }
+}
+
+
+
+/* Frame 2 — refined top navigation */
+
+#tab-button-export{order:1}
+#tab-button-layers{order:2}
+#tab-button-text{order:3}
+#tab-button-images{order:4}
+
+.main-tab-button{
+  transition:
+    background-color 170ms ease,
+    color 170ms ease,
+    box-shadow 170ms ease,
+    border-color 170ms ease,
+    transform 170ms ease;
+  will-change:
+    background-color,
+    color,
+    box-shadow,
+    transform;
+}
+
+.main-tab-button:hover{
+  background:#EAEAEA;
+  color:#245679;
+  box-shadow:
+    inset 0 1px 2px rgba(0,0,0,.22);
+  transform:translateY(1px);
+}
+
+.main-tab-button.active{
+  background:#245679;
+  color:#fff;
+  box-shadow:0 4px 4px rgba(0,0,0,.25);
+  transform:translateY(0);
+}
+
+.main-tab-button.active:hover{
+  background:#245679;
+  color:#fff;
+  box-shadow:0 4px 4px rgba(0,0,0,.25);
+  transform:translateY(0);
+}
+
+.main-tab-button:active:not(.active){
+  transform:translateY(2px);
+  box-shadow:
+    inset 0 1px 3px rgba(0,0,0,.28);
+}
+
+.main-tab-icon{
+  transition:
+    color 170ms ease,
+    opacity 170ms ease,
+    transform 170ms ease;
+}
+
+.main-tab-button:hover .main-tab-icon{
+  transform:translateY(-.25px);
+}
+
+.main-tab-button.active .main-tab-icon{
+  transform:none;
+}
+
+@media (prefers-reduced-motion:reduce){
+  .main-tab-button,
+  .main-tab-icon{
+    transition:none;
+  }
+}
+
+
+
+/* ==========================================================
+   Frame 2 — header + Export top layout
+   ========================================================== */
+
+.brand-header{
+  height:64px;
+  margin:-18px -8px 0;
+  padding:10px 18px 8px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+  border-radius:0 0 10px 10px;
+  background:#245679;
+  color:#fff;
+  overflow:hidden;
+}
+
+.brand-title{
+  width:100%;
+  overflow:hidden;
+  text-align:center;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:12px;
+  line-height:1.25;
+  font-weight:400;
+  letter-spacing:.01em;
+}
+
+.brand-subtitle{
+  width:100%;
+  overflow:hidden;
+  text-align:center;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:rgba(255,255,255,.72);
+  font-size:12px;
+  line-height:1.25;
+  font-weight:400;
+  letter-spacing:.01em;
+}
+
+.main-tabs{
+  justify-content:center;
+  width:100%;
+  height:45px;
+  margin-top:24px;
+  padding:6px 0 7px;
+}
+
+#tab-export{
+  margin-top:12px;
+}
+
+.export-main-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 150px;
+  align-items:start;
+  gap:20px;
+  width:100%;
+}
+
+#settings{
+  margin-top:0;
+  padding-right:0;
+}
+
+.export-summary-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);
+  align-items:start;
+  gap:30px;
+  margin-top:0;
+}
+
+.export-compact-block{
+  margin:0;
+}
+
+.export-compact-block .option-title{
+  margin:0 0 9px;
+  color:#000;
+  font-size:12px;
+  line-height:1.25;
+  font-weight:600;
+}
+
+.export-compact-block .radio-row{
+  justify-content:flex-start;
+  align-items:center;
+  gap:13px;
+}
+
+.export-compact-block .radio{
+  flex:none;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  cursor:pointer;
+}
+
+.export-compact-block .radio input{
+  appearance:none;
+  -webkit-appearance:none;
+  position:static;
+  width:12px;
+  height:12px;
+  flex:0 0 12px;
+  margin:0;
+  opacity:1;
+  pointer-events:auto;
+  border:1.3px solid #245679;
+  border-radius:50%;
+  background:#fff;
+  cursor:pointer;
+  transition:
+    background-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.export-compact-block .radio input:checked{
+  background:#245679;
+  box-shadow:inset 0 0 0 2.5px #fff;
+}
+
+.export-compact-block .radio span{
+  display:inline;
+  min-height:0;
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  color:#111;
+  font-size:11px;
+  line-height:1.3;
+  font-weight:400;
+  cursor:pointer;
+}
+
+.export-compact-block .radio input:checked+span{
+  border:0;
+  background:transparent;
+  color:#111;
+  font-weight:400;
+}
+
+.export-outline-block{
+  margin:27px 0 0;
+}
+
+.export-outline-block .check{
+  gap:7px;
+  color:#050505;
+  font-size:12px;
+  line-height:1.3;
+  font-weight:600;
+}
+
+.export-outline-block .check input[type="checkbox"]{
+  width:12px;
+  height:12px;
+  flex-basis:12px;
+  border-color:#245679;
+  border-radius:3px;
+}
+
+.export-outline-block .check input[type="checkbox"]:checked{
+  background:#fff;
+  border-color:#245679;
+}
+
+.export-outline-block .check input[type="checkbox"]:checked::after{
+  left:3px;
+  top:0;
+  width:3px;
+  height:7px;
+  border-color:#245679;
+  border-width:0 1.5px 1.5px 0;
+}
+
+.export-outline-block .help{
+  width:11px;
+  height:11px;
+  flex-basis:11px;
+  border:0;
+  background:#245679;
+  color:#fff;
+  font-size:8px;
+  line-height:11px;
+}
+
+.export-outline-block #text-hint:empty{
+  display:none;
+}
+
+.export-selection{
+  margin-top:0;
+  min-width:0;
+}
+
+.export-selection .selection-head{
+  margin:0 0 10px;
+  display:block;
+}
+
+.export-selection #selection{
+  display:block;
+  color:#050505;
+  font-size:12px;
+  line-height:1.25;
+  font-weight:600;
+  white-space:nowrap;
+}
+
+.export-selection #selection-list{
+  display:block;
+  min-height:66px;
+  margin:0;
+  padding:10px 10px;
+  border-radius:10px;
+  background:#E4ECF2;
+  color:#111;
+  overflow:hidden;
+}
+
+.export-selection .selection-item{
+  display:block;
+  max-width:100%;
+  margin:0;
+  padding:2px 0;
+  border-radius:0;
+  background:transparent;
+  color:#111;
+  font-size:11px;
+  line-height:1.35;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.export-selection .selection-item:first-child{
+  color:#245679;
+  font-weight:600;
+}
+
+.export-selection .selection-item:hover{
+  background:transparent;
+  color:#245679;
+}
+
+.export-selection #selection-list > .muted{
+  display:block;
+  padding:2px 0;
+  color:#66727b;
+  font-size:11px;
+}
+
+@media (max-width:700px){
+  .brand-title{
+    font-size:10px;
+  }
+
+  .brand-subtitle{
+    font-size:10px;
+  }
+
+  .export-main-grid{
+    grid-template-columns:minmax(0,1fr) 130px;
+    gap:14px;
+  }
+
+  .export-summary-row{
+    gap:18px;
+  }
+}
+
+
+/* Force light theme */
+:root{
+  color-scheme:light;
+
+  --panel:#F7F7F7;
+  --border:#D9D9D9;
+  --text2:#666666;
+  --brand:#245679;
+
+  --figma-color-bg:#FFFFFF;
+  --figma-color-bg-secondary:#F7F7F7;
+  --figma-color-bg-hover:#F0F0F0;
+  --figma-color-bg-brand:#245679;
+  --figma-color-bg-brand-tertiary:#E4ECF2;
+
+  --figma-color-border:#D9D9D9;
+  --figma-color-border-strong:#9A9A9A;
+  --figma-color-border-brand:#245679;
+
+  --figma-color-text:#202124;
+  --figma-color-text-secondary:#666666;
+  --figma-color-text-brand:#245679;
+  --figma-color-text-onbrand:#FFFFFF;
+  --figma-color-text-danger:#C62828;
+}
+
+html,
+body{
+  color-scheme:light;
+  background:#FFFFFF !important;
+  color:#202124 !important;
+}
+
+.app,
+.main,
+.edit-card,
+.modal-card{
+  background:#FFFFFF;
+  color:#202124;
+}
+
+.results{
+  background:#F7F7F7;
+  color:#202124;
+}
+
+input,
+textarea,
+select,
+button,
+a.download{
+  color-scheme:light;
+}
+
+input[type="text"],
+input[type="number"],
+textarea,
+select,
+.edit-textarea,
+.print-row input[type="text"],
+.print-row input[type="number"]{
+  background:#FFFFFF !important;
+  color:#202124 !important;
+  border-color:#D9D9D9 !important;
+}
+
+input::placeholder,
+textarea::placeholder{
+  color:#8A8A8A;
+  opacity:1;
+}
+
+.edit-preview,
+.panel,
+#downloads-empty{
+  background:#F7F7F7;
+  color:#666666;
+}
+
+.selection-item{
+  background:#F3F3F3;
+  color:#666666;
+}
+
+button:not(.main-tab-button):not(.primary){
+  background:#FFFFFF;
+  color:#202124;
+}
+
+button:not(.main-tab-button):not(.primary):hover{
+  background:#F0F0F0;
+}
+
+.help::after{
+  background:#202124;
+  color:#FFFFFF;
+}
+
+
+/* === FIGMA FRAME 2 EXACT START === */
+
+html,
+body{
+  color-scheme:light;
+  background:#FFFFFF !important;
+  color:#000000 !important;
+  font-family:Inter,system-ui,sans-serif;
+  font-size:12px;
+  font-weight:400;
+}
+
+.brand-header{
+  height:64px;
+  background:#245679;
+  color:#FFFFFF;
+  border-radius:0 0 10px 10px;
+}
+
+.brand-title,
+.brand-subtitle{
+  font-family:Inter,system-ui,sans-serif;
+  font-size:12px;
+  line-height:1;
+  font-weight:500;
+  letter-spacing:0;
+}
+
+.brand-subtitle{
+  color:rgba(255,255,255,.72);
+}
+
+/* ---------- tabs ---------- */
+
+.main-tab-button{
+  font-family:Inter,system-ui,sans-serif;
+  font-size:12px;
+  line-height:1;
+  font-weight:400;
+  letter-spacing:0;
+  border:1px solid #DADADA;
+  background:#EAEAEA;
+  color:#000000;
+  box-shadow:none;
+
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+.main-tab-button:hover:not(.active){
+  background:#EAEAEA;
+  color:#245679;
+  border-color:#DADADA;
+  box-shadow:
+    inset 0 1px 1px rgba(0,0,0,.25);
+  transform:none;
+}
+
+.main-tab-button.active,
+.main-tab-button.active:hover{
+  background:#245679;
+  color:#FFFFFF;
+  border-color:#CACACA;
+  box-shadow:none;
+  transform:none;
+}
+
+/* ---------- texts ---------- */
+
+.option-title,
+.export-compact-block .option-title,
+.export-outline-block .check,
+#print-panel .check,
+#print-panel .print-label,
+#selection{
+  font-family:Inter,system-ui,sans-serif;
+  font-size:12px;
+  line-height:1.2;
+  font-weight:400;
+  color:#000000;
+}
+
+/* ---------- radio: exact 11px / 7px ---------- */
+
+.radio-row{
+  gap:12px;
+}
+
+.radio,
+.export-compact-block .radio{
+  flex:none;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
+
+.radio input,
+.export-compact-block .radio input{
+  appearance:none;
+  -webkit-appearance:none;
+  position:relative;
+
+  width:11px;
+  height:11px;
+  min-width:11px;
+  flex:0 0 11px;
+
+  margin:0;
+  padding:0;
+
+  opacity:1;
+  pointer-events:auto;
+
+  border:1px solid #245679;
+  border-radius:50%;
+  background:#FFFFFF;
+  box-shadow:none;
+}
+
+.radio input:checked,
+.export-compact-block .radio input:checked{
+  background:#FFFFFF;
+  box-shadow:none;
+}
+
+.radio input:checked::after,
+.export-compact-block .radio input:checked::after{
+  content:"";
+  position:absolute;
+  left:1px;
+  top:1px;
+
+  width:7px;
+  height:7px;
+
+  border-radius:50%;
+  background:#245679;
+}
+
+.radio span,
+.radio input:checked + span,
+.export-compact-block .radio span,
+.export-compact-block .radio input:checked + span{
+  min-height:0;
+  padding:0;
+
+  border:0;
+  background:transparent;
+
+  color:#000000;
+
+  font-family:Inter,system-ui,sans-serif;
+  font-size:12px;
+  line-height:1.2;
+  font-weight:400;
+}
+
+/* ---------- checkbox: exact 11px ---------- */
+
+.check{
+  gap:6px;
+  font-weight:400;
+}
+
+.check input[type="checkbox"],
+.export-outline-block .check input[type="checkbox"]{
+  appearance:none;
+  -webkit-appearance:none;
+
+  position:relative;
+
+  width:11px;
+  height:11px;
+  min-width:11px;
+  flex:0 0 11px;
+
+  margin:0;
+  padding:0;
+
+  border:1px solid #245679;
+  border-radius:2.5px;
+
+  background:#FFFFFF;
+}
+
+.check input[type="checkbox"]:checked,
+.export-outline-block .check input[type="checkbox"]:checked{
+  border-color:#245679;
+  background:#FFFFFF;
+}
+
+.check input[type="checkbox"]:checked::after,
+.export-outline-block .check input[type="checkbox"]:checked::after{
+  content:"";
+
+  position:absolute;
+  left:2px;
+  top:1px;
+
+  width:5px;
+  height:3px;
+
+  border:solid #245679;
+  border-width:0 0 1px 1px;
+
+  transform:rotate(-45deg);
+}
+
+/* ---------- ? tooltip ---------- */
+
+.help,
+.export-outline-block .help{
+  width:9px;
+  height:9px;
+  min-width:9px;
+  flex:0 0 9px;
+
+  border:1px solid #245679;
+  border-radius:50%;
+
+  background:#FFFFFF;
+  color:#245679;
+
+  font:500 7px/7px Inter,system-ui,sans-serif;
+}
+
+#text-hint{
+  display:none !important;
+}
+
+/* ---------- print controls ---------- */
+
+#print-panel{
+  margin-top:27px;
+  padding:0;
+
+  border:0;
+  border-radius:0;
+}
+
+#print-panel > .panel-title{
+  display:none;
+}
+
+#print-panel .print-row{
+  grid-template-columns:104px 114px;
+  gap:10px;
+
+  width:max-content;
+  margin-top:4px;
+}
+
+#print-panel .print-sub{
+  margin-left:0;
+}
+
+#print-layer-name,
+#print-spot-name{
+  width:114px !important;
+  height:15px !important;
+  min-height:15px;
+
+  padding:0 7px !important;
+
+  border:0 !important;
+  border-radius:7.5px !important;
+
+  background:#E4ECF2 !important;
+  color:#000000 !important;
+
+  font:400 10px/15px Inter,system-ui,sans-serif !important;
+}
+
+/* ---------- selected layers ---------- */
+
+.export-selection{
+  min-height:214px;
+
+  padding-left:10px;
+
+  border-left:
+    1px solid
+    rgba(27,119,184,.10);
+}
+
+.export-selection .selection-head{
+  margin:0 0 10px;
+}
+
+.export-selection #selection{
+  font-size:12px;
+  font-weight:400;
+}
+
+.export-selection #selection-list{
+  width:114px;
+  height:66px;
+  min-height:66px;
+
+  padding:8px 9px;
+
+  display:block;
+  overflow:auto;
+
+  border-radius:10px;
+
+  background:#E4ECF2;
+
+  box-shadow:
+    inset 0 1px 1px
+    rgba(0,0,0,.05);
+}
+
+.selection-item{
+  width:100%;
+  min-height:17px;
+
+  margin:0;
+  padding:0;
+
+  display:flex;
+  align-items:center;
+  gap:4px;
+
+  background:transparent;
+  border:0;
+  border-radius:0;
+}
+
+.selection-name{
+  min-width:0;
+  flex:1 1 auto;
+
+  height:auto;
+
+  margin:0;
+  padding:0 !important;
+
+  border:0 !important;
+  border-radius:0 !important;
+
+  background:transparent !important;
+  color:#000000 !important;
+
+  box-shadow:none !important;
+
+  text-align:left;
+
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+
+  font:
+    400 10px/1.35
+    Inter,system-ui,sans-serif !important;
+
+  cursor:default;
+}
+
+.selection-remove{
+  width:10px;
+  height:10px;
+  min-width:10px;
+
+  margin:0;
+  padding:0 !important;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border:0 !important;
+  border-radius:0 !important;
+
+  background:transparent !important;
+  color:#245679 !important;
+
+  box-shadow:none !important;
+
+  font:
+    400 10px/10px
+    Inter,system-ui,sans-serif !important;
+
+  opacity:0;
+
+  cursor:pointer;
+
+  transition:
+    opacity 140ms ease,
+    color 140ms ease;
+}
+
+.selection-item:first-child .selection-name,
+.selection-item:hover .selection-name{
+  color:#245679 !important;
+}
+
+.selection-item:first-child .selection-remove,
+.selection-item:hover .selection-remove,
+.selection-remove:focus-visible{
+  opacity:1;
+}
+
+.selection-remove:hover{
+  color:#153D59 !important;
+}
+
+@media (prefers-reduced-motion:reduce){
+  .main-tab-button,
+  .selection-remove{
+    transition:none;
+  }
+}
+
+/* === FIGMA FRAME 2 EXACT END === */
+
+
+/* === REF2 PIXEL PERFECT START === */
+
+:root{
+  color-scheme:light;
+  --ref-blue:#245679;
+  --ref-light:#E4ECF2;
+  --ref-tab:#EAEAEA;
+  --ref-line:rgba(27,119,184,.10);
+}
+
+html,
+body{
+  width:621px !important;
+  min-width:621px !important;
+  height:703px !important;
+  min-height:703px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  overflow:hidden !important;
+
+  background:#fff !important;
+  color:#000 !important;
+
+  font-family:
+    Inter,
+    system-ui,
+    sans-serif !important;
+
+  font-size:12px !important;
+  font-weight:400 !important;
+  line-height:1 !important;
+
+  color-scheme:light;
+}
+
+.app{
+  position:relative !important;
+
+  display:block !important;
+
+  width:621px !important;
+  height:703px !important;
+  min-height:703px !important;
+
+  background:#fff !important;
+}
+
+.main{
+  position:relative !important;
+
+  width:621px !important;
+  height:414px !important;
+  min-height:414px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  border:0 !important;
+
+  background:#fff !important;
+}
+
+
+/* ---------------- HEADER ---------------- */
+
+.brand-header{
+  position:absolute !important;
+  z-index:2;
+
+  left:10px !important;
+  top:0 !important;
+
+  width:601px !important;
+  height:64px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  border-radius:
+    0
+    0
+    10px
+    10px !important;
+
+  background:#245679 !important;
+  color:#fff !important;
+}
+
+.brand-title,
+.brand-subtitle{
+  position:absolute !important;
+
+  left:0 !important;
+
+  width:601px !important;
+
+  padding:0 !important;
+  margin:0 !important;
+
+  text-align:center !important;
+  white-space:nowrap !important;
+
+  overflow:visible !important;
+  text-overflow:clip !important;
+
+  font-family:
+    Inter,
+    system-ui,
+    sans-serif !important;
+
+  font-size:12px !important;
+  font-style:normal !important;
+  font-weight:400 !important;
+  line-height:15px !important;
+
+  letter-spacing:0 !important;
+}
+
+.brand-title{
+  top:16px !important;
+  color:#fff !important;
+}
+
+.brand-subtitle{
+  top:38px !important;
+  color:#fff !important;
+}
+
+
+/* ---------------- TABS ---------------- */
+
+.main-tabs{
+  position:absolute !important;
+  z-index:3;
+
+  left:71.5px !important;
+  top:94.5px !important;
+
+  width:auto !important;
+  height:30px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  display:flex !important;
+  align-items:flex-start !important;
+  justify-content:flex-start !important;
+
+  gap:15.5px !important;
+
+  overflow:visible !important;
+
+  background:transparent !important;
+}
+
+.main-tab-button{
+  flex:none !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  gap:6px !important;
+
+  border:1px solid #DADADA !important;
+  border-radius:9.5px !important;
+
+  background:#EAEAEA !important;
+  color:#000 !important;
+
+  box-shadow:none !important;
+
+  font-family:
+    Inter,
+    system-ui,
+    sans-serif !important;
+
+  font-size:12px !important;
+  font-weight:400 !important;
+  line-height:1 !important;
+
+  letter-spacing:0 !important;
+
+  transition:
+    background-color 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease !important;
+
+  transform:none !important;
+}
+
+#tab-button-export{
+  width:94px !important;
+  height:30px !important;
+  min-height:30px !important;
+
+  border-color:#CACACA !important;
+}
+
+#tab-button-layers{
+  width:75px !important;
+  height:27px !important;
+  min-height:27px !important;
+}
+
+#tab-button-text{
+  width:143px !important;
+  height:26px !important;
+  min-height:26px !important;
+}
+
+#tab-button-images{
+  width:119px !important;
+  height:26px !important;
+  min-height:26px !important;
+}
+
+.main-tab-button.active,
+.main-tab-button.active:hover{
+  background:#245679 !important;
+  color:#fff !important;
+
+  border-color:#CACACA !important;
+
+  box-shadow:none !important;
+}
+
+.main-tab-button:hover:not(.active){
+  background:#EAEAEA !important;
+  color:#245679 !important;
+
+  /* exact SVG filter:
+     offset-y 1, blur .5, black 25% */
+  box-shadow:
+    inset 0 1px 1px
+    rgba(0,0,0,.25)
+    !important;
+
+  transform:none !important;
+}
+
+.main-tab-icon{
+  flex:none !important;
+
+  transition:
+    color 160ms ease !important;
+
+  transform:none !important;
+}
+
+
+/* ---------------- EXPORT CANVAS ---------------- */
+
+#tab-export{
+  position:absolute !important;
+
+  left:10px !important;
+  top:150px !important;
+
+  width:601px !important;
+  height:264px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  overflow:visible !important;
+
+  background:#fff !important;
+}
+
+#settings{
+  position:static !important;
+
+  width:601px !important;
+  height:264px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  border:0 !important;
+
+  background:transparent !important;
+}
+
+#tab-export,
+#tab-export *{
+  font-family:
+    Inter,
+    system-ui,
+    sans-serif;
+}
+
+.ref-format,
+.ref-color{
+  position:absolute !important;
+
+  top:0 !important;
+
+  height:42px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  color:#000 !important;
+}
+
+.ref-format{
+  left:0 !important;
+  width:130px !important;
+}
+
+.ref-color{
+  left:165px !important;
+  width:150px !important;
+}
+
+.ref-label{
+  position:absolute !important;
+
+  left:0 !important;
+  top:0 !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  color:#000 !important;
+
+  font-size:12px !important;
+  font-weight:400 !important;
+  line-height:15px !important;
+}
+
+.ref-radio-line{
+  position:absolute !important;
+
+  left:0 !important;
+  top:25px !important;
+
+  display:flex !important;
+  align-items:center !important;
+
+  gap:10px !important;
+}
+
+
+/* radio 11×11 / selected 7×7 */
+#tab-export .radio{
+  position:relative !important;
+
+  display:inline-flex !important;
+  align-items:center !important;
+
+  gap:6px !important;
+
+  flex:none !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  cursor:pointer !important;
+}
+
+#tab-export .radio input{
+  appearance:none !important;
+  -webkit-appearance:none !important;
+
+  position:relative !important;
+
+  display:block !important;
+
+  width:11px !important;
+  height:11px !important;
+
+  min-width:11px !important;
+  min-height:11px !important;
+
+  flex:0 0 11px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  opacity:1 !important;
+
+  border:1px solid #245679 !important;
+  border-radius:50% !important;
+
+  background:#fff !important;
+
+  box-shadow:none !important;
+
+  pointer-events:auto !important;
+}
+
+#tab-export .radio input:checked::after{
+  content:"" !important;
+
+  position:absolute !important;
+
+  left:1px !important;
+  top:1px !important;
+
+  width:7px !important;
+  height:7px !important;
+
+  border-radius:50% !important;
+
+  background:#245679 !important;
+}
+
+#tab-export .radio span,
+#tab-export .radio input:checked + span{
+  min-height:0 !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  border:0 !important;
+
+  background:transparent !important;
+  color:#000 !important;
+
+  font-size:12px !important;
+  font-weight:400 !important;
+  line-height:15px !important;
+}
+
+
+/* checkbox 11×11 */
+#tab-export .check{
+  display:inline-flex !important;
+  align-items:center !important;
+
+  gap:6px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  color:#000 !important;
+
+  font-size:12px !important;
+  font-weight:400 !important;
+  line-height:15px !important;
+
+  cursor:pointer !important;
+}
+
+#tab-export .check input[type="checkbox"]{
+  appearance:none !important;
+  -webkit-appearance:none !important;
+
+  position:relative !important;
+
+  width:11px !important;
+  height:11px !important;
+
+  min-width:11px !important;
+  min-height:11px !important;
+
+  flex:0 0 11px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  border:1px solid #245679 !important;
+  border-radius:2.5px !important;
+
+  background:#fff !important;
+
+  box-shadow:none !important;
+}
+
+#tab-export .check input[type="checkbox"]:checked{
+  background:#fff !important;
+  border-color:#245679 !important;
+}
+
+#tab-export .check input[type="checkbox"]:checked::after{
+  content:"" !important;
+
+  position:absolute !important;
+
+  left:2px !important;
+  top:1px !important;
+
+  width:5px !important;
+  height:3px !important;
+
+  border:solid #245679 !important;
+  border-width:
+    0
+    0
+    1px
+    1px
+    !important;
+
+  transform:rotate(-45deg) !important;
+}
+
+
+/* ---------------- TOP OUTLINE ---------------- */
+
+.ref-outline{
+  position:absolute !important;
+
+  left:0 !important;
+  top:55px !important;
+
+  height:20px !important;
+}
+
+.ref-outline .help{
+  margin-left:0 !important;
+}
+
+
+/* ---------------- GUIDES ---------------- */
+
+.ref-line{
+  position:absolute !important;
+
+  left:0 !important;
+
+  height:1px !important;
+
+  background:rgba(27,119,184,.10) !important;
+
+  pointer-events:none !important;
+}
+
+.ref-line-top{
+  top:92px !important;
+  width:476px !important;
+}
+
+.ref-line-mid{
+  top:208px !important;
+  width:476px !important;
+}
+
+.ref-vline{
+  position:absolute !important;
+
+  left:248px !important;
+  top:92px !important;
+
+  width:1px !important;
+  height:115px !important;
+
+  background:rgba(27,119,184,.10) !important;
+
+  pointer-events:none !important;
+}
+
+
+/* ---------------- PRINT ---------------- */
+
+.ref-print-panel{
+  position:absolute !important;
+
+  left:0 !important;
+  top:92px !important;
+
+  width:476px !important;
+  height:116px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  border:0 !important;
+  border-radius:0 !important;
+
+  background:transparent !important;
+
+  box-shadow:none !important;
+}
+
+.ref-print-left,
+.ref-print-right{
+  position:absolute !important;
+
+  top:0 !important;
+
+  height:116px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  background:transparent !important;
+}
+
+.ref-print-left{
+  left:0 !important;
+  width:248px !important;
+}
+
+.ref-print-right{
+  left:269px !important;
+  width:197px !important;
+}
+
+.ref-print-row,
+.ref-right-row{
+  position:absolute !important;
+
+  left:0 !important;
+
+  width:100% !important;
+  height:20px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+}
+
+.ref-row-layer,
+.ref-row-optimize{
+  top:20px !important;
+}
+
+.ref-row-spot,
+.ref-row-frame-size{
+  top:40px !important;
+}
+
+.ref-row-overprint{
+  top:60px !important;
+}
+
+.ref-row-manual-size{
+  top:59px !important;
+}
+
+.ref-row-stroke,
+.ref-row-scale{
+  top:80px !important;
+}
+
+.ref-print-row > .check,
+.ref-right-row > .check,
+.ref-right-row > .radio{
+  position:absolute !important;
+
+  left:0 !important;
+  top:0 !important;
+
+  height:15px !important;
+}
+
+
+/* exact light-blue inputs */
+.ref-pill-input,
+.ref-stroke-pill,
+.ref-profile-select-wrap{
+  border:0 !important;
+
+  background:#E4ECF2 !important;
+
+  box-shadow:
+    inset 0 1px 1px
+    rgba(0,0,0,.25)
+    !important;
+
+  color:#000 !important;
+}
+
+.ref-pill-input{
+  position:absolute !important;
+
+  height:15px !important;
+
+  min-height:15px !important;
+
+  margin:0 !important;
+  padding:0 5px !important;
+
+  border-radius:7.5px !important;
+
+  outline:0 !important;
+
+  font-size:10px !important;
+  font-weight:400 !important;
+  line-height:15px !important;
+
+  appearance:textfield !important;
+  -moz-appearance:textfield !important;
+}
+
+.ref-pill-input::-webkit-inner-spin-button,
+.ref-pill-input::-webkit-outer-spin-button{
+  margin:0 !important;
+  -webkit-appearance:none !important;
+}
+
+.ref-pill-wide{
+  left:111px !important;
+  top:0 !important;
+
+  width:114px !important;
+}
+
+.ref-row-title{
+  position:absolute !important;
+
+  left:0 !important;
+  top:0 !important;
+
+  font-size:12px !important;
+  font-weight:400 !important;
+  line-height:15px !important;
+}
+
+.ref-stroke-pill{
+  position:absolute !important;
+
+  left:111px !important;
+  top:0 !important;
+
+  width:53px !important;
+  height:15px !important;
+
+  display:grid !important;
+  grid-template-columns:
+    14px
+    25px
+    14px !important;
+
+  align-items:center !important;
+
+  border-radius:7.5px !important;
+}
+
+.ref-stroke-pill button{
+  width:14px !important;
+  height:15px !important;
+
+  min-width:0 !important;
+  min-height:0 !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  border:0 !important;
+
+  background:transparent !important;
+  color:#000 !important;
+
+  font-size:10px !important;
+  font-weight:400 !important;
+  line-height:15px !important;
+
+  box-shadow:none !important;
+}
+
+#stroke-value{
+  display:block !important;
+
+  text-align:center !important;
+
+  font-size:10px !important;
+  font-weight:400 !important;
+  line-height:15px !important;
+}
+
+.ref-unit{
+  position:absolute !important;
+
+  left:169px !important;
+  top:0 !important;
+
+  font-size:10px !important;
+  font-weight:400 !important;
+  line-height:15px !important;
+}
+
+
+/* right controls */
+.ref-size-radio{
+  position:absolute !important;
+
+  left:0 !important;
+  top:0 !important;
+}
+
+.ref-dimension{
+  top:0 !important;
+
+  width:43px !important;
+}
+
+#print-final-width{
+  left:83px !important;
+}
+
+.ref-times{
+  position:absolute !important;
+
+  left:128px !important;
+  top:0 !important;
+
+  width:9px !important;
+
+  text-align:center !important;
+
+  font-size:12px !important;
+  font-weight:400 !important;
+  line-height:15px !important;
+}
+
+#print-final-height{
+  left:138px !important;
+}
+
+.ref-scale-input{
+  left:83px !important;
+  top:0 !important;
+
+  width:24px !important;
+
+  padding:0 !important;
+
+  text-align:center !important;
+}
+
+.ref-scale-presets{
+  position:absolute !important;
+
+  left:117px !important;
+  top:0 !important;
+
+  display:flex !important;
+  align-items:center !important;
+
+  height:15px !important;
+
+  gap:10px !important;
+}
+
+.ref-scale-presets button{
+  min-width:0 !important;
+  min-height:0 !important;
+
+  height:15px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  border:0 !important;
+
+  background:transparent !important;
+  color:rgba(0,0,0,.8) !important;
+
+  box-shadow:none !important;
+
+  font-size:6px !important;
+  font-weight:400 !important;
+  line-height:15px !important;
+
+  cursor:pointer !important;
+}
+
+.ref-scale-presets button:hover{
+  color:#245679 !important;
+}
+
+
+/* ---------------- HELP ---------------- */
+
+.help,
+#tab-export .help{
+  position:absolute !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  width:9px !important;
+  height:9px !important;
+
+  min-width:9px !important;
+  min-height:9px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  border:1px solid #245679 !important;
+  border-radius:50% !important;
+
+  background:#fff !important;
+  color:#245679 !important;
+
+  font-family:
+    Inter,
+    system-ui,
+    sans-serif !important;
+
+  font-size:7px !important;
+  font-weight:400 !important;
+  line-height:7px !important;
+
+  cursor:help !important;
+}
+
+.help::after{
+  display:none !important;
+  content:none !important;
+}
+
+.ref-outline .help{
+  position:relative !important;
+}
+
+.ref-help-left{
+  left:232.5px !important;
+  top:1px !important;
+}
+
+.ref-help-right{
+  left:180.5px !important;
+  top:1px !important;
+}
+
+
+/* ---------------- SELECTION ---------------- */
+
+.export-selection{
+  position:absolute !important;
+
+  left:476px !important;
+  top:0 !important;
+
+  width:125px !important;
+  height:263px !important;
+
+  margin:0 !important;
+  padding:0 0 0 10px !important;
+
+  border-left:
+    1px solid
+    rgba(27,119,184,.10)
+    !important;
+
+  background:#fff !important;
+}
+
+.export-selection .selection-head{
+  position:absolute !important;
+
+  left:10px !important;
+  top:0 !important;
+
+  width:114px !important;
+  height:20px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+}
+
+#selection{
+  color:#000 !important;
+
+  font-size:12px !important;
+  font-weight:400 !important;
+  line-height:15px !important;
+
+  white-space:nowrap !important;
+}
+
+#selection-list{
+  position:absolute !important;
+
+  left:10px !important;
+  top:30px !important;
+
+  width:114px !important;
+  height:66px !important;
+  min-height:66px !important;
+
+  margin:0 !important;
+  padding:7px 10px !important;
+
+  display:block !important;
+
+  overflow:hidden !important;
+
+  border:0 !important;
+  border-radius:10px !important;
+
+  background:#E4ECF2 !important;
+
+  box-shadow:
+    inset 0 1px 1px
+    rgba(0,0,0,.25)
+    !important;
+
+  color:#000 !important;
+}
+
+#selection-list .muted{
+  display:block !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  color:#657681 !important;
+
+  font-size:10px !important;
+  font-weight:400 !important;
+  line-height:17px !important;
+}
+
+.selection-item{
+  position:relative !important;
+
+  display:flex !important;
+  align-items:center !important;
+
+  width:94px !important;
+  height:17px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  border:0 !important;
+  border-radius:0 !important;
+
+  background:transparent !important;
+
+  color:#000 !important;
+
+  font-size:10px !important;
+  font-weight:400 !important;
+  line-height:17px !important;
+}
+
+.selection-name{
+  flex:1 1 auto !important;
+
+  min-width:0 !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  border:0 !important;
+
+  background:transparent !important;
+  color:#000 !important;
+
+  box-shadow:none !important;
+
+  text-align:left !important;
+
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+
+  font-size:10px !important;
+  font-weight:400 !important;
+  line-height:17px !important;
+}
+
+.selection-item:first-child .selection-name{
+  color:#245679 !important;
+}
+
+.selection-remove{
+  position:absolute !important;
+
+  right:0 !important;
+  top:0 !important;
+
+  width:10px !important;
+  height:17px !important;
+
+  min-width:0 !important;
+  min-height:0 !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  border:0 !important;
+
+  background:transparent !important;
+  color:#245679 !important;
+
+  box-shadow:none !important;
+
+  font-size:8px !important;
+  font-weight:400 !important;
+  line-height:17px !important;
+
+  opacity:1 !important;
+}
+
+
+/* ---------------- PROFILE ---------------- */
+
+.ref-profile-panel{
+  position:absolute !important;
+
+  left:0 !important;
+  top:208px !important;
+
+  width:248px !important;
+  height:56px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  border:0 !important;
+  border-radius:0 !important;
+
+  background:#fff !important;
+
+  box-shadow:none !important;
+}
+
+.ref-profile-title{
+  position:absolute !important;
+
+  left:0 !important;
+  top:18px !important;
+
+  color:#000 !important;
+
+  font-size:12px !important;
+  font-weight:400 !important;
+  line-height:15px !important;
+}
+
+.ref-profile-select-wrap{
+  position:absolute !important;
+
+  left:126px !important;
+  top:20px !important;
+
+  width:99px !important;
+  height:15px !important;
+
+  border-radius:7.5px !important;
+}
+
+.ref-profile-select-wrap::after{
+  content:"" !important;
+
+  position:absolute !important;
+
+  right:7px !important;
+  top:5px !important;
+
+  width:4px !important;
+  height:4px !important;
+
+  border-right:1px solid #245679 !important;
+  border-bottom:1px solid #245679 !important;
+
+  transform:rotate(45deg) !important;
+
+  pointer-events:none !important;
+}
+
+#icc-profile-select{
+  appearance:none !important;
+  -webkit-appearance:none !important;
+
+  position:absolute !important;
+
+  inset:0 !important;
+
+  width:99px !important;
+  height:15px !important;
+
+  margin:0 !important;
+  padding:0 18px 0 5px !important;
+
+  border:0 !important;
+  border-radius:7.5px !important;
+
+  outline:0 !important;
+
+  background:transparent !important;
+  color:#000 !important;
+
+  font-size:10px !important;
+  font-weight:400 !important;
+  line-height:15px !important;
+}
+
+.ref-profile-help{
+  left:232.5px !important;
+  top:23px !important;
+}
+
+
+/* ---------------- CONVERTER ---------------- */
+
+.ref-converter-panel{
+  position:absolute !important;
+
+  left:269px !important;
+  top:208px !important;
+
+  width:207px !important;
+  height:56px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  border:0 !important;
+  border-radius:0 !important;
+
+  background:#fff !important;
+
+  box-shadow:none !important;
+}
+
+.ref-converter-title{
+  position:absolute !important;
+
+  left:0 !important;
+  top:18px !important;
+
+  font-size:12px !important;
+  font-weight:400 !important;
+  line-height:15px !important;
+
+  color:#000 !important;
+}
+
+.ref-icon-button{
+  position:absolute !important;
+
+  top:20px !important;
+
+  width:15px !important;
+  height:15px !important;
+
+  min-width:15px !important;
+  min-height:15px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  border:0 !important;
+
+  background:transparent !important;
+  color:#245679 !important;
+
+  box-shadow:none !important;
+}
+
+.ref-icon-button svg{
+  display:block !important;
+
+  width:100% !important;
+  height:100% !important;
+}
+
+.ref-refresh{
+  left:161px !important;
+}
+
+.ref-trash{
+  left:187px !important;
+}
+
+
+/* ---------------- EXPORT BUTTON ---------------- */
+
+#export{
+  position:absolute !important;
+
+  left:487.5px !important;
+  top:219.5px !important;
+
+  width:113px !important;
+  height:30px !important;
+
+  min-width:113px !important;
+  min-height:30px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  border:1px solid #245679 !important;
+  border-radius:9.5px !important;
+
+  background:#fff !important;
+  color:#245679 !important;
+
+  box-shadow:none !important;
+
+  font-size:12px !important;
+  font-weight:400 !important;
+  line-height:28px !important;
+}
+
+#export:hover:not(:disabled){
+  background:#F7FAFC !important;
+}
+
+#export:disabled{
+  opacity:.45 !important;
+}
+
+#close{
+  display:none !important;
+}
+
+#status{
+  position:absolute !important;
+
+  left:269px !important;
+  top:247px !important;
+
+  width:205px !important;
+
+  min-height:0 !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  overflow:hidden !important;
+
+  color:#245679 !important;
+
+  font-size:8px !important;
+  font-weight:400 !important;
+  line-height:10px !important;
+
+  white-space:nowrap !important;
+  text-overflow:ellipsis !important;
+}
+
+#status:empty{
+  display:none !important;
+}
+
+
+/* ---------------- DOWNLOADS ---------------- */
+
+.results{
+  position:absolute !important;
+
+  left:10px !important;
+  top:414px !important;
+  right:auto !important;
+  bottom:auto !important;
+
+  width:601px !important;
+  height:289px !important;
+  min-width:601px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  display:block !important;
+
+  border:0 !important;
+  border-top:
+    1px solid
+    rgba(27,119,184,.10)
+    !important;
+
+  background:#fff !important;
+
+  overflow:hidden !important;
+}
+
+.results-head{
+  position:absolute !important;
+
+  left:0 !important;
+  top:0 !important;
+
+  width:601px !important;
+  height:47px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+}
+
+.results-head h2{
+  position:absolute !important;
+
+  left:0 !important;
+  top:18px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  color:#000 !important;
+
+  font-size:12px !important;
+  font-weight:400 !important;
+  line-height:15px !important;
+}
+
+.results-head-row{
+  display:contents !important;
+}
+
+#clear-downloads{
+  position:absolute !important;
+
+  right:0 !important;
+  top:16.5px !important;
+
+  width:69px !important;
+  height:22px !important;
+
+  min-width:69px !important;
+  min-height:22px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  border:1px solid #245679 !important;
+  border-radius:9.5px !important;
+
+  background:#fff !important;
+  color:#245679 !important;
+
+  box-shadow:none !important;
+
+  font-size:10px !important;
+  font-weight:400 !important;
+  line-height:20px !important;
+}
+
+#downloads-empty{
+  display:none !important;
+}
+
+#downloads{
+  position:absolute !important;
+
+  left:0 !important;
+  top:52px !important;
+
+  width:601px !important;
+  height:220px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  display:flex !important;
+  flex-direction:column !important;
+
+  gap:6px !important;
+
+  overflow:auto !important;
+}
+
+.download-row{
+  display:flex !important;
+  align-items:center !important;
+
+  width:max-content !important;
+  height:17px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  gap:28px !important;
+}
+
+a.download{
+  display:block !important;
+
+  min-width:0 !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  border:0 !important;
+
+  background:transparent !important;
+  color:#245679 !important;
+
+  box-shadow:none !important;
+
+  font-size:10px !important;
+  font-weight:400 !important;
+  line-height:17px !important;
+
+  text-decoration:none !important;
+}
+
+.download-delete{
+  width:10px !important;
+  height:17px !important;
+
+  min-width:0 !important;
+  min-height:0 !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  border:0 !important;
+
+  background:transparent !important;
+  color:#245679 !important;
+
+  box-shadow:none !important;
+
+  font-size:8px !important;
+  font-weight:400 !important;
+  line-height:17px !important;
+}
+
+
+/* ---------------- FLOATING TOOLTIP ---------------- */
+
+#ref-floating-tooltip{
+  position:fixed !important;
+  z-index:100000 !important;
+
+  max-width:240px !important;
+
+  padding:6px 8px !important;
+
+  border:0 !important;
+  border-radius:5px !important;
+
+  background:#245679 !important;
+  color:#fff !important;
+
+  box-shadow:
+    0 2px 8px
+    rgba(0,0,0,.18)
+    !important;
+
+  font-family:
+    Inter,
+    system-ui,
+    sans-serif !important;
+
+  font-size:10px !important;
+  font-style:normal !important;
+  font-weight:400 !important;
+  line-height:1.35 !important;
+
+  white-space:normal !important;
+
+  pointer-events:none !important;
+}
+
+
+/* ---------------- EDIT MODES ---------------- */
+
+.app.edit-mode .main{
+  width:621px !important;
+  height:703px !important;
+  min-height:703px !important;
+
+  border:0 !important;
+}
+
+.app.edit-mode .results{
+  display:none !important;
+}
+
+.edit-tab{
+  position:absolute !important;
+
+  left:10px !important;
+  top:145px !important;
+
+  width:601px !important;
+  max-height:548px !important;
+
+  overflow:auto !important;
+
+  margin:0 !important;
+  padding:5px 0 18px !important;
+}
+
+
+/* no dark mode / no inherited gray panels */
+#tab-export .panel,
+#tab-export .option-block,
+#tab-export .print-row,
+#tab-export .print-sub{
+  background:transparent !important;
+
+  border:0 !important;
+
+  box-shadow:none !important;
+}
+
+@media (prefers-reduced-motion:reduce){
+  .main-tab-button{
+    transition:none !important;
+  }
+}
+
+/* === REF2 PIXEL PERFECT END === */
+
+
+/* === REF2 EDIT TABS + TOOLTIP FIX START === */
+
+/* ==========================================================
+   TOOLTIP ICON ALIGNMENT
+   ========================================================== */
+
+/*
+  Сам кружок ? больше не наследует случайные top/left
+  от общих .help правил.
+*/
+
+.ref-outline .help{
+  position:static !important;
+
+  flex:0 0 9px !important;
+
+  margin-left:0 !important;
+
+  transform:
+    translateY(0)
+    !important;
+}
+
+
+/* левый блок печати */
+.ref-print-left .ref-help-left{
+  position:absolute !important;
+
+  left:232px !important;
+  top:3px !important;
+
+  transform:none !important;
+}
+
+
+/* правый блок печати */
+.ref-print-right .ref-help-right{
+  position:absolute !important;
+
+  left:181px !important;
+  top:3px !important;
+
+  transform:none !important;
+}
+
+
+/* ICC */
+.ref-profile-help{
+  position:absolute !important;
+
+  left:233px !important;
+  top:23px !important;
+
+  transform:none !important;
+}
+
+
+/* ==========================================================
+   COMMON EDIT-TAB CANVAS
+   ========================================================== */
+
+#tab-text,
+#tab-layers,
+#tab-images{
+  position:absolute !important;
+
+  left:10px !important;
+  top:150px !important;
+
+  width:601px !important;
+  height:553px !important;
+
+  max-height:none !important;
+
+  margin:0 !important;
+  padding:0 0 20px !important;
+
+  overflow-y:auto !important;
+  overflow-x:hidden !important;
+
+  background:#fff !important;
+  color:#000 !important;
+
+  scrollbar-width:thin;
+  scrollbar-color:
+    rgba(36,86,121,.35)
+    transparent;
+}
+
+#tab-text::-webkit-scrollbar,
+#tab-layers::-webkit-scrollbar,
+#tab-images::-webkit-scrollbar{
+  width:5px;
+}
+
+#tab-text::-webkit-scrollbar-thumb,
+#tab-layers::-webkit-scrollbar-thumb,
+#tab-images::-webkit-scrollbar-thumb{
+  border-radius:5px;
+
+  background:
+    rgba(36,86,121,.35);
+}
+
+#tab-text .edit-grid,
+#tab-layers .edit-grid,
+#tab-images .edit-grid{
+  display:block !important;
+
+  width:601px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+}
+
+#tab-text .edit-card,
+#tab-layers .edit-card,
+#tab-images .edit-card{
+  position:relative !important;
+
+  width:601px !important;
+
+  margin:0 !important;
+  padding:0 0 58px !important;
+
+  border:0 !important;
+  border-radius:0 !important;
+
+  background:#fff !important;
+
+  box-shadow:none !important;
+}
+
+
+/* ==========================================================
+   TITLES
+   ========================================================== */
+
+#tab-text .edit-card-title,
+#tab-layers .edit-card-title,
+#tab-images .edit-card-title{
+  display:block !important;
+
+  margin:0 0 18px !important;
+  padding:0 0 12px !important;
+
+  border-bottom:
+    1px solid
+    rgba(27,119,184,.10)
+    !important;
+}
+
+#tab-text h2,
+#tab-layers h2,
+#tab-images h2{
+  margin:0 0 5px !important;
+  padding:0 !important;
+
+  color:#000 !important;
+
+  font-family:
+    Inter,
+    system-ui,
+    sans-serif !important;
+
+  font-size:12px !important;
+  font-style:normal !important;
+  font-weight:400 !important;
+  line-height:15px !important;
+}
+
+#tab-text .hint,
+#tab-layers .hint,
+#tab-images .hint,
+#tab-text .edit-note,
+#tab-layers .edit-note,
+#tab-images .edit-note{
+  margin:0 !important;
+
+  color:#63737d !important;
+
+  font-family:
+    Inter,
+    system-ui,
+    sans-serif !important;
+
+  font-size:10px !important;
+  font-weight:400 !important;
+  line-height:14px !important;
+}
+
+
+/* ==========================================================
+   ROWS
+   ========================================================== */
+
+#tab-text .edit-row,
+#tab-layers .edit-row,
+#tab-images .edit-row{
+  display:grid !important;
+
+  grid-template-columns:
+    145px
+    minmax(0,1fr)
+    !important;
+
+  align-items:center !important;
+
+  gap:12px !important;
+
+  width:476px !important;
+
+  margin:8px 0 0 !important;
+}
+
+#tab-text .edit-row.top{
+  align-items:start !important;
+}
+
+#tab-text .edit-row > label:first-child,
+#tab-layers .edit-row > label:first-child,
+#tab-images .edit-row > label:first-child,
+#tab-text .edit-label,
+#tab-layers .edit-label,
+#tab-images .edit-label,
+#tab-layers .edit-row > .edit-label{
+  color:#000 !important;
+
+  font-size:12px !important;
+  font-weight:400 !important;
+  line-height:15px !important;
+}
+
+
+/* ==========================================================
+   INPUTS / SELECTS
+   same visual language as rezka / ICC controls
+   ========================================================== */
+
+#tab-text input[type="text"],
+#tab-text input[type="number"],
+#tab-text select,
+#tab-layers input[type="text"],
+#tab-layers input[type="number"],
+#tab-layers select,
+#tab-images input[type="text"],
+#tab-images input[type="number"],
+#tab-images select{
+  height:22px !important;
+  min-height:22px !important;
+
+  margin:0 !important;
+  padding:0 8px !important;
+
+  border:0 !important;
+  border-radius:11px !important;
+
+  outline:0 !important;
+
+  background:#E4ECF2 !important;
+  color:#000 !important;
+
+  box-shadow:
+    inset 0 1px 1px
+    rgba(0,0,0,.25)
+    !important;
+
+  font-family:
+    Inter,
+    system-ui,
+    sans-serif !important;
+
+  font-size:10px !important;
+  font-weight:400 !important;
+  line-height:22px !important;
+}
+
+#tab-text select,
+#tab-layers select,
+#tab-images select{
+  appearance:auto !important;
+  -webkit-appearance:auto !important;
+}
+
+
+/* textarea */
+
+#tab-text .edit-textarea{
+  width:100% !important;
+  min-height:54px !important;
+
+  margin:0 !important;
+  padding:7px 8px !important;
+
+  resize:vertical !important;
+
+  border:0 !important;
+  border-radius:9px !important;
+
+  outline:0 !important;
+
+  background:#E4ECF2 !important;
+  color:#000 !important;
+
+  box-shadow:
+    inset 0 1px 1px
+    rgba(0,0,0,.25)
+    !important;
+
+  font-family:
+    Inter,
+    system-ui,
+    sans-serif !important;
+
+  font-size:10px !important;
+  font-weight:400 !important;
+  line-height:14px !important;
+}
+
+
+/* ==========================================================
+   CHECKBOXES
+   ========================================================== */
+
+#tab-text .check,
+#tab-layers .check,
+#tab-images .check{
+  display:inline-flex !important;
+  align-items:center !important;
+
+  gap:6px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  color:#000 !important;
+
+  font-family:
+    Inter,
+    system-ui,
+    sans-serif !important;
+
+  font-size:12px !important;
+  font-weight:400 !important;
+  line-height:15px !important;
+}
+
+#tab-text .check input[type="checkbox"],
+#tab-layers .check input[type="checkbox"],
+#tab-images .check input[type="checkbox"]{
+  appearance:none !important;
+  -webkit-appearance:none !important;
+
+  position:relative !important;
+
+  width:11px !important;
+  height:11px !important;
+
+  min-width:11px !important;
+  min-height:11px !important;
+
+  flex:0 0 11px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  border:
+    1px solid
+    #245679
+    !important;
+
+  border-radius:2.5px !important;
+
+  background:#fff !important;
+
+  box-shadow:none !important;
+}
+
+#tab-text .check input[type="checkbox"]:checked::after,
+#tab-layers .check input[type="checkbox"]:checked::after,
+#tab-images .check input[type="checkbox"]:checked::after{
+  content:"" !important;
+
+  position:absolute !important;
+
+  left:2px !important;
+  top:1px !important;
+
+  width:5px !important;
+  height:3px !important;
+
+  border:solid #245679 !important;
+
+  border-width:
+    0
+    0
+    1px
+    1px
+    !important;
+
+  transform:
+    rotate(-45deg)
+    !important;
+}
+
+
+/* checkbox groups */
+
+#tab-text .edit-checks,
+#tab-layers .edit-checks,
+#tab-images .edit-checks{
+  display:flex !important;
+  flex-wrap:wrap !important;
+
+  gap:9px 18px !important;
+
+  width:476px !important;
+
+  margin:12px 0 0 !important;
+  padding:0 !important;
+}
+
+
+/* ==========================================================
+   SUBSECTIONS
+   ========================================================== */
+
+#tab-text .edit-subsection,
+#tab-layers .edit-subsection,
+#tab-images .edit-subsection{
+  width:476px !important;
+
+  margin:16px 0 0 !important;
+  padding:14px 0 0 !important;
+
+  border-top:
+    1px solid
+    rgba(27,119,184,.10)
+    !important;
+}
+
+#tab-text .edit-subtitle,
+#tab-layers .edit-subtitle,
+#tab-images .edit-subtitle{
+  margin:0 0 9px !important;
+
+  color:#000 !important;
+
+  font-size:12px !important;
+  font-weight:400 !important;
+  line-height:15px !important;
+}
+
+
+/* two / three columns */
+
+#tab-text .edit-two,
+#tab-layers .edit-two,
+#tab-images .edit-two{
+  display:grid !important;
+
+  grid-template-columns:
+    minmax(0,1fr)
+    minmax(0,1fr)
+    !important;
+
+  gap:12px !important;
+}
+
+#tab-layers .edit-three{
+  display:grid !important;
+
+  grid-template-columns:
+    minmax(0,1fr)
+    70px
+    60px
+    !important;
+
+  gap:8px !important;
+}
+
+#tab-text .edit-two > div,
+#tab-layers .edit-two > div{
+  display:grid !important;
+
+  gap:5px !important;
+}
+
+
+/* ==========================================================
+   TOKEN BUTTONS
+   ========================================================== */
+
+#tab-text .token-row{
+  display:flex !important;
+  align-items:center !important;
+
+  gap:5px !important;
+
+  margin-top:5px !important;
+}
+
+#tab-text .token-button{
+  width:22px !important;
+  height:18px !important;
+
+  min-width:22px !important;
+  min-height:18px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  border:
+    1px solid
+    #245679
+    !important;
+
+  border-radius:7px !important;
+
+  background:#fff !important;
+  color:#245679 !important;
+
+  box-shadow:none !important;
+
+  font-size:10px !important;
+  font-weight:400 !important;
+  line-height:16px !important;
+}
+
+
+/* ==========================================================
+   PREVIEW BLOCKS
+   ========================================================== */
+
+#tab-text .edit-preview,
+#tab-layers .edit-preview,
+#tab-images .edit-preview{
+  width:476px !important;
+  min-height:52px !important;
+
+  margin:16px 0 0 !important;
+  padding:8px 10px !important;
+
+  border:0 !important;
+  border-radius:10px !important;
+
+  background:#E4ECF2 !important;
+  color:#000 !important;
+
+  box-shadow:
+    inset 0 1px 1px
+    rgba(0,0,0,.25)
+    !important;
+
+  font-family:
+    Inter,
+    system-ui,
+    sans-serif !important;
+
+  font-size:10px !important;
+  font-weight:400 !important;
+  line-height:14px !important;
+}
+
+#tab-text .edit-example,
+#tab-layers .edit-example,
+#tab-images .edit-example{
+  display:grid !important;
+
+  grid-template-columns:
+    minmax(0,1fr)
+    16px
+    minmax(0,1fr)
+    !important;
+
+  gap:5px !important;
+
+  margin-top:4px !important;
+
+  color:#000 !important;
+}
+
+#tab-text .edit-example .after,
+#tab-layers .edit-example .after,
+#tab-images .edit-example .after{
+  color:#245679 !important;
+}
+
+
+/* ==========================================================
+   ACTION BUTTON
+   ========================================================== */
+
+#tab-text .edit-actions,
+#tab-layers .edit-actions,
+#tab-images .edit-actions{
+  width:476px !important;
+
+  display:flex !important;
+  justify-content:flex-end !important;
+
+  margin:15px 0 0 !important;
+}
+
+#tab-text .edit-actions button,
+#tab-layers .edit-actions button,
+#tab-images .edit-actions button{
+  min-height:30px !important;
+
+  margin:0 !important;
+  padding:0 13px !important;
+
+  border:
+    1px solid
+    #245679
+    !important;
+
+  border-radius:9.5px !important;
+
+  background:#fff !important;
+  color:#245679 !important;
+
+  box-shadow:none !important;
+
+  font-family:
+    Inter,
+    system-ui,
+    sans-serif !important;
+
+  font-size:12px !important;
+  font-weight:400 !important;
+  line-height:28px !important;
+}
+
+#tab-text .edit-actions button:hover:not(:disabled),
+#tab-layers .edit-actions button:hover:not(:disabled),
+#tab-images .edit-actions button:hover:not(:disabled){
+  background:#F7FAFC !important;
+}
+
+
+/* ==========================================================
+   IMAGES — 3×3 POSITION GRID
+   ========================================================== */
+
+#tab-images .anchor-grid{
+  display:grid !important;
+
+  grid-template-columns:
+    repeat(
+      3,
+      25px
+    )
+    !important;
+
+  grid-template-rows:
+    repeat(
+      3,
+      25px
+    )
+    !important;
+
+  gap:4px !important;
+
+  width:max-content !important;
+
+  margin-top:8px !important;
+}
+
+#tab-images .anchor-button{
+  width:25px !important;
+  height:25px !important;
+
+  min-width:25px !important;
+  min-height:25px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  border:
+    1px solid
+    rgba(36,86,121,.35)
+    !important;
+
+  border-radius:7px !important;
+
+  background:#fff !important;
+  color:#245679 !important;
+
+  box-shadow:none !important;
+
+  font-size:11px !important;
+  line-height:23px !important;
+}
+
+#tab-images .anchor-button.active{
+  background:#245679 !important;
+  color:#fff !important;
+
+  border-color:#245679 !important;
+}
+
+
+/* ==========================================================
+   REMOVE LEGACY CARD/PANEL VISUALS
+   ========================================================== */
+
+#tab-text .panel,
+#tab-layers .panel,
+#tab-images .panel{
+  background:transparent !important;
+
+  border:0 !important;
+
+  box-shadow:none !important;
+}
+
+
+/* === REF2 EDIT TABS + TOOLTIP FIX END === */
+
+
+/* === COMPACT EDIT UI V2 START === */
+
+/* ----------------------------------------------------------
+   EXPORT ? ICONS
+   no magic left coordinates anymore
+   ---------------------------------------------------------- */
+
+.ref-print-row,
+.ref-right-row{
+  position:absolute !important;
+}
+
+.ref-print-left .ref-print-row > .help{
+  left:auto !important;
+  right:0 !important;
+  top:3px !important;
+
+  transform:none !important;
+}
+
+.ref-print-right .ref-right-row > .help{
+  left:auto !important;
+  right:0 !important;
+  top:3px !important;
+
+  transform:none !important;
+}
+
+.ref-profile-panel > .help{
+  left:auto !important;
+  right:6px !important;
+  top:23px !important;
+
+  transform:none !important;
+}
+
+.ref-outline > .help{
+  position:static !important;
+
+  margin-left:0 !important;
+
+  transform:none !important;
+}
+
+
+/* ----------------------------------------------------------
+   EDIT PAGE
+   ---------------------------------------------------------- */
+
+#tab-text,
+#tab-layers,
+#tab-images{
+  position:absolute !important;
+
+  left:10px !important;
+  top:150px !important;
+
+  width:601px !important;
+  height:553px !important;
+
+  margin:0 !important;
+  padding:0 0 18px !important;
+
+  overflow-y:auto !important;
+  overflow-x:hidden !important;
+
+  background:#fff !important;
+
+  color:#000 !important;
+
+  scrollbar-width:thin;
+  scrollbar-color:
+    rgba(36,86,121,.28)
+    transparent;
+}
+
+.compact-page{
+  width:601px;
+
+  margin:0;
+  padding:0;
+}
+
+.compact-page-head{
+  height:31px;
+
+  margin:0 0 10px;
+  padding:0 0 10px;
+
+  display:flex;
+
+  align-items:center;
+
+  gap:6px;
+
+  border-bottom:
+    1px solid
+    rgba(27,119,184,.10);
+
+  color:#000;
+
+  font:
+    400 12px/15px
+    Inter,
+    system-ui,
+    sans-serif;
+}
+
+
+/* ----------------------------------------------------------
+   GROUPS
+   ---------------------------------------------------------- */
+
+.compact-group{
+  position:relative;
+
+  margin:0 0 10px;
+  padding:10px 10px;
+
+  border:
+    1px solid
+    rgba(36,86,121,.10);
+
+  border-radius:10px;
+
+  background:
+    rgba(228,236,242,.22);
+}
+
+.compact-group-title{
+  min-height:15px;
+
+  margin:0 0 9px;
+
+  display:flex;
+
+  align-items:center;
+
+  gap:5px;
+
+  color:#000;
+
+  font:
+    400 12px/15px
+    Inter,
+    system-ui,
+    sans-serif;
+}
+
+
+/* ----------------------------------------------------------
+   ROW / FIELD
+   ---------------------------------------------------------- */
+
+.compact-row{
+  display:grid;
+
+  grid-template-columns:
+    132px
+    minmax(0,1fr);
+
+  align-items:center;
+
+  gap:10px;
+
+  min-height:22px;
+}
+
+.compact-row > label,
+.compact-field > label{
+  display:flex;
+
+  align-items:center;
+
+  gap:5px;
+
+  margin:0 0 4px;
+
+  color:#000;
+
+  font:
+    400 10px/14px
+    Inter,
+    system-ui,
+    sans-serif;
+}
+
+.compact-row > label{
+  margin:0;
+}
+
+.compact-two{
+  display:grid;
+
+  grid-template-columns:
+    minmax(0,1fr)
+    minmax(0,1fr);
+
+  gap:10px;
+}
+
+.compact-field{
+  min-width:0;
+}
+
+.compact-number-grid{
+  display:grid;
+
+  grid-template-columns:
+    minmax(0,1fr)
+    70px
+    70px;
+
+  gap:10px;
+}
+
+
+/* ----------------------------------------------------------
+   INPUT
+   ---------------------------------------------------------- */
+
+.compact-page input[type="text"],
+.compact-page input[type="number"],
+.compact-page select{
+  width:100%;
+  height:22px;
+
+  min-width:0;
+  min-height:22px;
+
+  margin:0;
+  padding:0 8px;
+
+  border:0;
+
+  border-radius:11px;
+
+  outline:0;
+
+  background:#E4ECF2;
+  color:#000;
+
+  box-shadow:
+    inset 0 1px 1px
+    rgba(0,0,0,.25);
+
+  font:
+    400 10px/22px
+    Inter,
+    system-ui,
+    sans-serif;
+}
+
+.compact-textarea{
+  width:100%;
+  height:48px;
+  min-height:48px;
+
+  margin:0;
+  padding:6px 8px;
+
+  resize:vertical;
+
+  border:0;
+  border-radius:9px;
+
+  outline:0;
+
+  background:#E4ECF2;
+  color:#000;
+
+  box-shadow:
+    inset 0 1px 1px
+    rgba(0,0,0,.25);
+
+  font:
+    400 10px/14px
+    Inter,
+    system-ui,
+    sans-serif;
+}
+
+
+/* ----------------------------------------------------------
+   CHECKS
+   ---------------------------------------------------------- */
+
+.compact-check-grid{
+  display:grid;
+
+  grid-template-columns:
+    repeat(
+      3,
+      minmax(0,1fr)
+    );
+
+  gap:8px 10px;
+
+  margin-top:10px;
+}
+
+.compact-check{
+  min-width:0;
+
+  display:flex;
+
+  align-items:center;
+
+  gap:6px;
+
+  color:#000;
+
+  font:
+    400 10px/14px
+    Inter,
+    system-ui,
+    sans-serif;
+}
+
+.compact-single-check{
+  margin-top:9px;
+}
+
+.compact-check input[type="checkbox"]{
+  appearance:none;
+  -webkit-appearance:none;
+
+  position:relative;
+
+  width:11px !important;
+  height:11px !important;
+
+  min-width:11px !important;
+  min-height:11px !important;
+
+  flex:0 0 11px;
+
+  margin:0;
+  padding:0;
+
+  border:
+    1px solid
+    #245679;
+
+  border-radius:2.5px;
+
+  background:#fff;
+
+  box-shadow:none;
+}
+
+.compact-check input[type="checkbox"]:checked::after{
+  content:"";
+
+  position:absolute;
+
+  left:2px;
+  top:1px;
+
+  width:5px;
+  height:3px;
+
+  border:
+    solid
+    #245679;
+
+  border-width:
+    0
+    0
+    1px
+    1px;
+
+  transform:
+    rotate(-45deg);
+}
+
+
+/* ----------------------------------------------------------
+   HELP ICON
+   ---------------------------------------------------------- */
+
+.compact-help{
+  position:static !important;
+
+  display:inline-flex !important;
+
+  align-items:center !important;
+  justify-content:center !important;
+
+  width:9px !important;
+  height:9px !important;
+
+  min-width:9px !important;
+  min-height:9px !important;
+
+  flex:0 0 9px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  border:
+    1px solid
+    #245679 !important;
+
+  border-radius:50% !important;
+
+  background:#fff !important;
+  color:#245679 !important;
+
+  font:
+    400 7px/7px
+    Inter,
+    system-ui,
+    sans-serif !important;
+
+  cursor:help !important;
+}
+
+
+/* ----------------------------------------------------------
+   TOKENS
+   ---------------------------------------------------------- */
+
+.compact-token-row{
+  height:18px;
+
+  margin-top:4px;
+
+  display:flex;
+
+  justify-content:flex-end;
+
+  gap:4px;
+}
+
+.compact-token{
+  width:22px;
+  height:18px;
+
+  min-width:22px;
+  min-height:18px;
+
+  margin:0;
+  padding:0;
+
+  border:
+    1px solid
+    #245679;
+
+  border-radius:7px;
+
+  background:#fff;
+  color:#245679;
+
+  box-shadow:none;
+
+  font:
+    400 10px/16px
+    Inter,
+    system-ui,
+    sans-serif;
+}
+
+
+/* ----------------------------------------------------------
+   PREVIEW
+   ---------------------------------------------------------- */
+
+.compact-preview-group{
+  padding-bottom:10px;
+}
+
+.compact-preview{
+  min-height:50px;
+
+  padding:8px 9px;
+
+  overflow:hidden;
+
+  border-radius:9px;
+
+  background:#E4ECF2;
+
+  box-shadow:
+    inset 0 1px 1px
+    rgba(0,0,0,.25);
+
+  color:#000;
+
+  font:
+    400 10px/14px
+    Inter,
+    system-ui,
+    sans-serif;
+}
+
+.compact-preview .edit-example{
+  display:grid;
+
+  grid-template-columns:
+    minmax(0,1fr)
+    14px
+    minmax(0,1fr);
+
+  gap:4px;
+
+  margin-top:4px;
+}
+
+.compact-preview .after{
+  color:#245679;
+}
+
+
+/* ----------------------------------------------------------
+   BUTTON
+   ---------------------------------------------------------- */
+
+.compact-actions{
+  display:flex;
+
+  justify-content:flex-end;
+
+  margin-top:3px;
+}
+
+.compact-actions button{
+  min-width:100px;
+  height:30px;
+  min-height:30px;
+
+  margin:0;
+  padding:0 12px;
+
+  border:
+    1px solid
+    #245679;
+
+  border-radius:9.5px;
+
+  background:#fff;
+  color:#245679;
+
+  box-shadow:none;
+
+  font:
+    400 12px/28px
+    Inter,
+    system-ui,
+    sans-serif;
+}
+
+.compact-actions button:hover:not(:disabled){
+  background:#F7FAFC;
+}
+
+
+/* ----------------------------------------------------------
+   BY LAYER
+   ---------------------------------------------------------- */
+
+.compact-by-layer-check{
+  margin-top:18px;
+}
+
+.compact-folder-field{
+  margin-top:5px;
+}
+
+
+/* ----------------------------------------------------------
+   IMAGES
+   ---------------------------------------------------------- */
+
+.compact-image-columns{
+  display:grid;
+
+  grid-template-columns:
+    minmax(0,1fr)
+    minmax(0,1fr);
+
+  gap:10px;
+}
+
+.compact-image-columns .compact-group{
+  margin-bottom:10px;
+}
+
+.compact-density{
+  margin-top:9px;
+}
+
+.compact-anchor-grid{
+  display:grid;
+
+  grid-template-columns:
+    repeat(
+      3,
+      25px
+    );
+
+  gap:4px;
+
+  width:max-content;
+}
+
+.compact-anchor-grid .anchor-button{
+  width:25px;
+  height:25px;
+
+  min-width:25px;
+  min-height:25px;
+
+  margin:0;
+  padding:0;
+
+  border:
+    1px solid
+    rgba(36,86,121,.35);
+
+  border-radius:7px;
+
+  background:#fff;
+  color:#245679;
+
+  box-shadow:none;
+
+  font:
+    400 11px/23px
+    Inter,
+    system-ui,
+    sans-serif;
+}
+
+.compact-anchor-grid .anchor-button.active{
+  background:#245679;
+  color:#fff;
+
+  border-color:#245679;
+}
+
+
+/* ----------------------------------------------------------
+   remove all old card styling
+   ---------------------------------------------------------- */
+
+#tab-text .edit-grid,
+#tab-layers .edit-grid,
+#tab-images .edit-grid,
+#tab-text .edit-card,
+#tab-layers .edit-card,
+#tab-images .edit-card,
+#tab-text .edit-subsection,
+#tab-layers .edit-subsection,
+#tab-images .edit-subsection{
+  margin:0 !important;
+  padding:0 !important;
+
+  border:0 !important;
+  border-radius:0 !important;
+
+  background:transparent !important;
+
+  box-shadow:none !important;
+}
+
+
+/* === COMPACT EDIT UI V2 END === */
+
+
+/* === EXPORT UI FIXES 1 START === */
+
+/* ==========================================================
+   1. OUTLINE CHECKBOX + ?
+   ? всегда идёт после текста, никогда поверх checkbox
+   ========================================================== */
+
+#tab-export .ref-outline{
+  display:inline-flex !important;
+  align-items:center !important;
+
+  gap:6px !important;
+
+  width:auto !important;
+
+  overflow:visible !important;
+}
+
+#tab-export .ref-outline > input{
+  position:relative !important;
+
+  left:auto !important;
+  right:auto !important;
+  top:auto !important;
+  bottom:auto !important;
+
+  order:0 !important;
+}
+
+#tab-export .ref-outline > span:not(.help){
+  position:static !important;
+
+  order:1 !important;
+}
+
+#tab-export .ref-outline > .help{
+  position:relative !important;
+
+  left:auto !important;
+  right:auto !important;
+  top:auto !important;
+  bottom:auto !important;
+
+  inset:auto !important;
+
+  order:2 !important;
+
+  flex:0 0 9px !important;
+
+  margin:0 !important;
+
+  transform:none !important;
+}
+
+
+/* ==========================================================
+   2. LEFT PRINT COLUMN ?
+   Не касаются центрального divider
+   ========================================================== */
+
+#tab-export .ref-print-left{
+  z-index:2 !important;
+}
+
+#tab-export .ref-vline{
+  z-index:0 !important;
+}
+
+#tab-export
+.ref-print-left
+.ref-print-row
+> .help{
+  position:absolute !important;
+
+  left:auto !important;
+  right:8px !important;
+
+  top:3px !important;
+  bottom:auto !important;
+
+  inset-inline-start:auto !important;
+
+  transform:none !important;
+
+  z-index:3 !important;
+}
+
+
+/* правая колонка остаётся привязанной к своему краю */
+#tab-export
+.ref-print-right
+.ref-right-row
+> .help{
+  position:absolute !important;
+
+  left:auto !important;
+  right:0 !important;
+
+  top:3px !important;
+  bottom:auto !important;
+
+  transform:none !important;
+}
+
+
+/* ==========================================================
+   3. SELECTED LAYERS
+   Все чёрные. Синий только hover.
+   ========================================================== */
+
+#selection-list
+.selection-item
+.selection-name,
+#selection-list
+.selection-item:first-child
+.selection-name{
+  color:#000 !important;
+
+  font-weight:400 !important;
+}
+
+#selection-list
+.selection-item:hover
+.selection-name{
+  color:#245679 !important;
+}
+
+#selection-list
+.selection-item
+.selection-remove{
+  color:#245679 !important;
+}
+
+
+/* ==========================================================
+   4. RIGHT COLUMN INPUT FILLS
+   generic light-theme CSS раньше перебивал эти поля
+   ========================================================== */
+
+#tab-export
+.ref-print-right
+input.ref-pill-input,
+#tab-export
+.ref-print-right
+#print-final-width,
+#tab-export
+.ref-print-right
+#print-final-height,
+#tab-export
+.ref-print-right
+#print-scale{
+  background:#E4ECF2 !important;
+
+  border:0 !important;
+
+  box-shadow:
+    inset 0 1px 1px
+    rgba(0,0,0,.25)
+    !important;
+
+  color:#000 !important;
+}
+
+
+/* на disabled поле сохраняет заливку, только слегка тускнеет */
+#tab-export
+.ref-print-right
+input.ref-pill-input:disabled{
+  background:#E4ECF2 !important;
+
+  color:rgba(0,0,0,.45) !important;
+
+  opacity:1 !important;
+
+  box-shadow:
+    inset 0 1px 1px
+    rgba(0,0,0,.18)
+    !important;
+}
+
+
+/* ==========================================================
+   ICC dropdown — тот же inner shadow
+   ========================================================== */
+
+#tab-export
+.ref-profile-select-wrap{
+  background:#E4ECF2 !important;
+
+  box-shadow:
+    inset 0 1px 1px
+    rgba(0,0,0,.25)
+    !important;
+}
+
+
+/* === EXPORT UI FIXES 1 END === */
+
+
+
+
+
+
+
+
+/* === DEPENDENCIES + LAYERS SCROLL START === */
+
+
+/* ----------------------------------------------------------
+   Старый одиночный "Папка из слоя" больше не показываем.
+   IDs остаются в DOM для обратной совместимости.
+   ---------------------------------------------------------- */
+
+#tab-layers .compact-by-layer-check,
+#tab-layers #rename-folder-settings{
+  display:none !important;
+}
+
+
+/* ----------------------------------------------------------
+   Несколько зависимостей
+   ---------------------------------------------------------- */
+
+.rename-dependencies-block{
+  width:100%;
+
+  margin-top:12px;
+  padding-top:12px;
+
+  border-top:
+    1px solid
+    rgba(27,119,184,.10);
+}
+
+.rename-dependencies-title{
+  display:flex;
+
+  align-items:center;
+
+  gap:5px;
+
+  margin-bottom:8px;
+
+  color:#000;
+
+  font:
+    400 10px/14px
+    Inter,
+    system-ui,
+    sans-serif;
+}
+
+.rename-dependencies-head,
+.rename-dependency-row{
+  display:grid;
+
+  grid-template-columns:
+    minmax(0,1fr)
+    92px
+    22px;
+
+  gap:7px;
+
+  align-items:center;
+
+  width:100%;
+}
+
+.rename-dependencies-head{
+  margin-bottom:5px;
+
+  padding:0 7px;
+
+  color:#63737d;
+
+  font:
+    400 9px/12px
+    Inter,
+    system-ui,
+    sans-serif;
+}
+
+.rename-dependency-row{
+  margin-bottom:6px;
+}
+
+.rename-dependency-row input{
+  width:100% !important;
+}
+
+.rename-dependency-remove{
+  width:22px !important;
+  height:22px !important;
+
+  min-width:22px !important;
+  min-height:22px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  border:0 !important;
+  border-radius:50% !important;
+
+  background:transparent !important;
+  color:#245679 !important;
+
+  box-shadow:none !important;
+
+  font:
+    400 14px/22px
+    Inter,
+    system-ui,
+    sans-serif
+    !important;
+
+  cursor:pointer;
+}
+
+.rename-dependency-remove:hover{
+  background:
+    rgba(36,86,121,.08)
+    !important;
+}
+
+.rename-add-dependency{
+  width:auto !important;
+  height:22px !important;
+
+  min-width:0 !important;
+  min-height:22px !important;
+
+  margin:3px 0 0 !important;
+  padding:0 9px !important;
+
+  border:
+    1px solid
+    #245679
+    !important;
+
+  border-radius:9px !important;
+
+  background:#fff !important;
+  color:#245679 !important;
+
+  box-shadow:none !important;
+
+  font:
+    400 10px/20px
+    Inter,
+    system-ui,
+    sans-serif
+    !important;
+}
+
+
+/* ----------------------------------------------------------
+   Слои: скролл должен доходить ЗА кнопку.
+   ---------------------------------------------------------- */
+
+#tab-layers{
+  height:
+    calc(100vh - 150px)
+    !important;
+
+  min-height:0 !important;
+
+  padding-bottom:80px !important;
+
+  overflow-y:auto !important;
+  overflow-x:hidden !important;
+
+  overscroll-behavior:contain;
+}
+
+#tab-layers .compact-page,
+#tab-layers .edit-grid{
+  min-height:max-content !important;
+
+  padding-bottom:70px !important;
+}
+
+#tab-layers .edit-card{
+  min-height:max-content !important;
+
+  padding-bottom:100px !important;
+}
+
+#tab-layers .compact-actions,
+#tab-layers .edit-actions{
+  position:static !important;
+
+  margin-top:16px !important;
+  margin-bottom:50px !important;
+
+  padding-bottom:20px !important;
+
+  transform:none !important;
+}
+
+
+/* === DEPENDENCIES + LAYERS SCROLL END === */
+
+
+
+
+
+/* === HEADER MENU DONATION START === */
+
+
+/* ==========================================================
+   HEADER
+   ========================================================== */
+
+.brand-header{
+  position:relative !important;
+
+  height:64px !important;
+
+  overflow:hidden !important;
+
+  background:#245679 !important;
+  color:#fff !important;
+}
+
+
+/*
+ * RU and EN occupy EXACTLY the same coordinates.
+ */
+
+.brand-header .brand-title,
+.brand-header .brand-subtitle{
+  display:none !important;
+
+  position:absolute !important;
+
+  left:105px !important;
+  right:105px !important;
+  top:50% !important;
+
+  width:auto !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  transform:
+    translateY(-50%)
+    !important;
+
+  overflow:hidden !important;
+
+  color:#fff !important;
+
+  text-align:center !important;
+
+  text-overflow:ellipsis !important;
+
+  white-space:nowrap !important;
+}
+
+
+html[lang="ru"]
+.brand-header
+.brand-title{
+  display:block !important;
+}
+
+
+html[lang="en"]
+.brand-header
+.brand-subtitle{
+  display:block !important;
+}
+
+
+/* ==========================================================
+   TOP TABS
+   ALL FOUR ARE EXACTLY THE SAME HEIGHT
+   ========================================================== */
+
+.main-tab-button,
+.main-tab-button.active,
+#tab-button-export,
+#tab-button-layers,
+#tab-button-text,
+#tab-button-images{
+  box-sizing:border-box !important;
+
+  height:27px !important;
+  min-height:27px !important;
+  max-height:27px !important;
+
+  padding-top:0 !important;
+  padding-bottom:0 !important;
+
+  align-items:center !important;
+}
+
+
+/* ==========================================================
+   SAY THANKS — LEFT
+   ========================================================== */
+
+#thanks-button{
+  all:unset !important;
+
+  position:absolute !important;
+
+  z-index:30 !important;
+
+  left:8px !important;
+  bottom:4px !important;
+
+  width:auto !important;
+  height:12px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  border:0 !important;
+  border-radius:0 !important;
+
+  background:transparent !important;
+
+  box-shadow:none !important;
+
+  color:#fff !important;
+
+  font:
+    400 8px/12px
+    Inter,
+    system-ui,
+    sans-serif
+    !important;
+
+  cursor:pointer !important;
+
+  opacity:1 !important;
+}
+
+
+#thanks-button:hover{
+  text-decoration:
+    underline
+    !important;
+
+  text-underline-offset:
+    2px
+    !important;
+}
+
+
+/* ==========================================================
+   RU / EN — RIGHT
+   ========================================================== */
+
+#language-switch{
+  position:absolute !important;
+
+  z-index:30 !important;
+
+  right:8px !important;
+  bottom:4px !important;
+
+  display:flex !important;
+
+  align-items:center !important;
+
+  gap:3px !important;
+
+  height:12px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  border:0 !important;
+
+  background:transparent !important;
+
+  box-shadow:none !important;
+
+  color:#fff !important;
+
+  font:
+    400 8px/12px
+    Inter,
+    system-ui,
+    sans-serif
+    !important;
+
+  user-select:none !important;
+}
+
+
+#language-switch button,
+#language-switch button:hover,
+#language-switch button:focus,
+#language-switch button:active{
+  all:unset !important;
+
+  display:inline !important;
+
+  width:auto !important;
+  height:12px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  border:0 !important;
+  border-radius:0 !important;
+
+  background:transparent !important;
+
+  box-shadow:none !important;
+
+  color:#fff !important;
+
+  font:
+    400 8px/12px
+    Inter,
+    system-ui,
+    sans-serif
+    !important;
+
+  cursor:pointer !important;
+
+  opacity:1 !important;
+
+  text-decoration:none !important;
+}
+
+
+#language-switch button.active{
+  text-decoration:
+    underline
+    !important;
+
+  text-decoration-thickness:
+    1px
+    !important;
+
+  text-underline-offset:
+    2px
+    !important;
+}
+
+
+#language-switch > span{
+  color:#fff !important;
+
+  opacity:1 !important;
+}
+
+
+/* ==========================================================
+   MODAL
+   ========================================================== */
+
+.thanks-modal{
+  z-index:300 !important;
+
+  background:
+    rgba(0,0,0,.42)
+    !important;
+}
+
+
+.thanks-card{
+  position:relative !important;
+
+  width:360px !important;
+  max-width:
+    calc(100vw - 32px)
+    !important;
+
+  padding:
+    20px
+    20px
+    18px
+    !important;
+
+  border:0 !important;
+  border-radius:12px !important;
+
+  background:#fff !important;
+  color:#000 !important;
+
+  box-shadow:
+    0 12px 40px
+    rgba(0,0,0,.24)
+    !important;
+}
+
+
+.thanks-card h2{
+  margin:
+    0
+    28px
+    10px
+    0
+    !important;
+
+  padding:0 !important;
+
+  color:#000 !important;
+
+  font:
+    400 14px/18px
+    Inter,
+    system-ui,
+    sans-serif
+    !important;
+}
+
+
+.thanks-close{
+  all:unset !important;
+
+  position:absolute !important;
+
+  top:12px !important;
+  right:14px !important;
+
+  width:22px !important;
+  height:22px !important;
+
+  color:#245679 !important;
+
+  text-align:center !important;
+
+  font:
+    400 18px/22px
+    Inter,
+    system-ui,
+    sans-serif
+    !important;
+
+  cursor:pointer !important;
+}
+
+
+.thanks-text{
+  margin:
+    0
+    0
+    16px
+    !important;
+
+  color:#37474f !important;
+
+  font:
+    400 11px/16px
+    Inter,
+    system-ui,
+    sans-serif
+    !important;
+}
+
+
+/* ==========================================================
+   DONATION METHODS
+   ========================================================== */
+
+.thanks-methods{
+  display:grid !important;
+
+  gap:7px !important;
+}
+
+
+.thanks-method{
+  display:flex !important;
+
+  align-items:center !important;
+  justify-content:space-between !important;
+
+  box-sizing:border-box !important;
+
+  width:100% !important;
+  height:34px !important;
+
+  padding:
+    0
+    12px
+    !important;
+
+  border:
+    1px solid
+    rgba(36,86,121,.28)
+    !important;
+
+  border-radius:10px !important;
+
+  background:#fff !important;
+  color:#245679 !important;
+
+  text-decoration:none !important;
+
+  font:
+    400 11px/32px
+    Inter,
+    system-ui,
+    sans-serif
+    !important;
+}
+
+
+.thanks-method:hover{
+  background:#E4ECF2 !important;
+}
+
+
+.thanks-arrow{
+  font-size:14px !important;
+}
+
+
+/* ==========================================================
+   TON
+   ========================================================== */
+
+.thanks-ton{
+  display:flex !important;
+
+  align-items:center !important;
+  justify-content:space-between !important;
+
+  box-sizing:border-box !important;
+
+  gap:10px !important;
+
+  width:100% !important;
+
+  min-height:48px !important;
+
+  padding:
+    7px
+    9px
+    7px
+    12px
+    !important;
+
+  border:
+    1px solid
+    rgba(36,86,121,.28)
+    !important;
+
+  border-radius:10px !important;
+
+  background:#fff !important;
+}
+
+
+.thanks-ton-main{
+  display:grid !important;
+
+  min-width:0 !important;
+
+  gap:2px !important;
+}
+
+
+.thanks-ton-title{
+  color:#245679 !important;
+
+  font:
+    400 11px/14px
+    Inter,
+    system-ui,
+    sans-serif
+    !important;
+}
+
+
+.thanks-ton-address{
+  display:block !important;
+
+  max-width:210px !important;
+
+  overflow:hidden !important;
+
+  padding:0 !important;
+
+  background:transparent !important;
+
+  color:#63737d !important;
+
+  font:
+    400 8px/11px
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace
+    !important;
+
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+}
+
+
+.thanks-ton-copy{
+  flex:
+    0
+    0
+    auto
+    !important;
+
+  height:24px !important;
+
+  margin:0 !important;
+
+  padding:
+    0
+    8px
+    !important;
+
+  border:
+    1px solid
+    #245679
+    !important;
+
+  border-radius:8px !important;
+
+  background:#fff !important;
+  color:#245679 !important;
+
+  box-shadow:none !important;
+
+  font:
+    400 9px/22px
+    Inter,
+    system-ui,
+    sans-serif
+    !important;
+
+  cursor:pointer !important;
+}
+
+
+.thanks-ton-copy:hover{
+  background:#E4ECF2 !important;
+}
+
+
+/* ==========================================================
+   QUESTIONS / SUPPORT
+   ========================================================== */
+
+.thanks-support{
+  margin-top:16px !important;
+
+  padding-top:14px !important;
+
+  border-top:
+    1px solid
+    rgba(27,119,184,.12)
+    !important;
+}
+
+
+.thanks-support-title{
+  margin:
+    0
+    0
+    4px
+    !important;
+
+  color:#000 !important;
+
+  font:
+    400 11px/15px
+    Inter,
+    system-ui,
+    sans-serif
+    !important;
+}
+
+
+.thanks-support-text{
+  margin:
+    0
+    0
+    7px
+    !important;
+
+  color:#63737d !important;
+
+  font:
+    400 9px/13px
+    Inter,
+    system-ui,
+    sans-serif
+    !important;
+}
+
+
+.thanks-email{
+  color:#245679 !important;
+
+  font:
+    400 10px/14px
+    Inter,
+    system-ui,
+    sans-serif
+    !important;
+
+  text-decoration:underline !important;
+
+  text-underline-offset:2px !important;
+}
+
+
+.thanks-note{
+  margin:
+    14px
+    0
+    0
+    !important;
+
+  color:#63737d !important;
+
+  font:
+    400 9px/13px
+    Inter,
+    system-ui,
+    sans-serif
+    !important;
+}
+
+
+/* === HEADER MENU DONATION END === */
+
+
+/* === HEADER SUPPORT FIX START === */
+
+
+/* ----------------------------------------------------------
+   RU / EN TITLE
+
+   ВАЖНО:
+   обе строки имеют совершенно одинаковые координаты.
+   ---------------------------------------------------------- */
+
+.brand-header{
+  position:relative !important;
+}
+
+
+.brand-header .brand-title,
+.brand-header .brand-subtitle{
+  display:none !important;
+
+  position:absolute !important;
+
+  left:12px !important;
+  right:12px !important;
+
+  top:24px !important;
+
+  width:auto !important;
+  max-width:none !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  transform:
+    translateY(-50%)
+    !important;
+
+  overflow:hidden !important;
+
+  color:#fff !important;
+
+  font-family:
+    Inter,
+    system-ui,
+    sans-serif
+    !important;
+
+  font-size:10px !important;
+  font-weight:400 !important;
+  line-height:12px !important;
+
+  letter-spacing:0 !important;
+
+  text-align:center !important;
+
+  text-overflow:clip !important;
+
+  white-space:nowrap !important;
+}
+
+
+html[lang="ru"]
+.brand-header
+.brand-title{
+  display:block !important;
+}
+
+
+html[lang="en"]
+.brand-header
+.brand-subtitle{
+  display:block !important;
+}
+
+
+/* ----------------------------------------------------------
+   LEFT:
+   Сказать спасибо / Задать вопрос
+
+   То же оформление, что RU / EN.
+   ---------------------------------------------------------- */
+
+#support-switch{
+  position:absolute !important;
+
+  z-index:40 !important;
+
+  left:8px !important;
+  bottom:4px !important;
+
+  display:flex !important;
+
+  align-items:center !important;
+
+  gap:3px !important;
+
+  height:12px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  border:0 !important;
+
+  background:transparent !important;
+
+  box-shadow:none !important;
+
+  color:#fff !important;
+
+  font:
+    400 8px/12px
+    Inter,
+    system-ui,
+    sans-serif
+    !important;
+
+  user-select:none !important;
+}
+
+
+#support-switch button,
+#support-switch button:hover,
+#support-switch button:focus,
+#support-switch button:active,
+#support-switch a,
+#support-switch a:hover,
+#support-switch a:focus,
+#support-switch a:active{
+  all:unset !important;
+
+  display:inline !important;
+
+  width:auto !important;
+  height:12px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  border:0 !important;
+  border-radius:0 !important;
+
+  background:transparent !important;
+
+  box-shadow:none !important;
+
+  color:#fff !important;
+
+  font:
+    400 8px/12px
+    Inter,
+    system-ui,
+    sans-serif
+    !important;
+
+  cursor:pointer !important;
+
+  opacity:1 !important;
+
+  text-decoration:none !important;
+}
+
+
+#support-switch button:hover,
+#support-switch a:hover{
+  text-decoration:
+    underline
+    !important;
+
+  text-underline-offset:
+    2px
+    !important;
+}
+
+
+#support-switch > span{
+  color:#fff !important;
+
+  opacity:1 !important;
+}
+
+
+/* ----------------------------------------------------------
+   Main tabs — ещё раз окончательно фиксируем одинаковую высоту.
+   ---------------------------------------------------------- */
+
+.main-tab-button,
+.main-tab-button.active,
+#tab-button-export,
+#tab-button-layers,
+#tab-button-text,
+#tab-button-images{
+  box-sizing:border-box !important;
+
+  height:27px !important;
+  min-height:27px !important;
+  max-height:27px !important;
+
+  padding-top:0 !important;
+  padding-bottom:0 !important;
+}
+
+
+/* === HEADER SUPPORT FIX END === */
+
+</style>
+</head>
+
+<body>
+<div class="app">
+
+  <main class="main">
+
+    <header class="brand-header">
+      <div class="brand-title">
+        Оптимизатор Хранения, Управления, Единого Наименования и Направленного Отслеживания
+      </div>
+
+      <div class="brand-subtitle">Key Identifier Cataloging Kit Automating Structure Saving</div>
+    
+      <div
+        id="support-switch"
+        class="support-switch"
+      >
+        <button
+          id="thanks-button"
+          type="button"
+        >Сказать спасибо</button>
+
+        <span>/</span>
+
+        <a
+          id="question-button"
+          href="mailto:somedesignindeed@proton.me"
+          target="_blank"
+        >Задать вопрос</a>
+      </div>
+<div
+        id="language-switch"
+        class="language-switch"
+        aria-label="Язык интерфейса"
+      >
+        <button
+          id="language-ru"
+          type="button"
+          data-language="ru"
+          aria-pressed="true"
+        >RU</button>
+
+        <span>/</span>
+
+        <button
+          id="language-en"
+          type="button"
+          data-language="en"
+          aria-pressed="false"
+        >EN</button>
+      </div>
+</header>
+
+    <nav class="main-tabs" aria-label="Разделы">
+      <button
+        id="tab-button-export"
+        class="main-tab-button active"
+        type="button"
+        data-main-tab="export"
+      >
+<span class="main-tab-icon" aria-hidden="true">
+  <svg viewBox="14 5 15 15">
+    <path d="M28.7202 15.0358L25.7106 12.8931C25.6799 12.8709 25.6436 12.8578 25.6058 12.8551C25.568 12.8524 25.5302 12.8603 25.4967 12.8779C25.4276 12.9135 25.3852 12.9911 25.385 13.0692L25.3865 14.0835H22.679C22.5639 14.0835 22.4522 14.1645 22.4522 14.2798V16.1453C22.4522 16.2606 22.5639 16.34 22.679 16.34H25.4139V17.3623C25.4139 17.4402 25.4439 17.5118 25.5132 17.5475C25.5825 17.5832 25.6522 17.5772 25.7157 17.5318L28.7209 15.3751C28.7755 15.3361 28.7986 15.273 28.7986 15.2059V15.2055C28.7986 15.1379 28.7752 15.0749 28.7202 15.0358Z" fill="currentColor"/>
+    <path d="M23.7924 17.1554H22.7342C22.6594 17.1554 22.5877 17.1851 22.5348 17.238C22.4819 17.2909 22.4522 17.3626 22.4522 17.4374H22.451V17.9282H15.8246V10.2435H18.7142C18.789 10.2435 18.8608 10.2138 18.9137 10.1609C18.9666 10.108 18.9963 10.0362 18.9963 9.96141V7.07179H22.4509V12.9994H22.4527C22.4543 13.073 22.4847 13.143 22.5373 13.1945C22.5898 13.246 22.6605 13.275 22.7341 13.2751H23.7922C23.946 13.2751 24.0702 13.1522 24.0736 12.9994H24.0743V6.38603H24.0735V5.73043C24.0735 5.65562 24.0438 5.58388 23.9909 5.53098C23.938 5.47808 23.8662 5.44836 23.7914 5.44836H18.4322L14.2014 9.67934V19.2694C14.2014 19.4253 14.3276 19.5515 14.4834 19.5515H23.7914C23.8662 19.5515 23.938 19.5217 23.9909 19.4688C24.0438 19.416 24.0735 19.3442 24.0735 19.2694V18.8703H24.0743V17.4371C24.0742 17.3624 24.0445 17.2908 23.9916 17.2379C23.9388 17.1851 23.8671 17.1554 23.7924 17.1554Z" fill="currentColor"/>
+  </svg>
+</span>
+<span>Экспорт</span>
+</button>
+
+      <button
+        id="tab-button-text"
+        class="main-tab-button"
+        type="button"
+        data-main-tab="text"
+      >
+<span class="main-tab-icon" aria-hidden="true">
+  <svg viewBox="207 5 15 15">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M219.548 6.00961V6.73076H218.106V18.2692H219.548V18.9904L218.106 18.9903V18.9904H217.385L217.385 18.9903L215.942 18.9904V18.2692L217.385 18.2692V6.73076H215.942V6.00961H219.548ZM221.712 8.17307V16.8269H218.827V15.3846H220.269V9.61539H218.827V8.17307H221.712ZM216.663 8.17307V16.8269H207.288V8.17307H216.663ZM213.346 9.03846H212.337V13.9423C212.337 14.393 212.308 14.6747 212.287 14.9459L212.284 14.982L212.282 15.018C212.272 15.1563 212.264 15.2955 212.264 15.4567H213.274V14.8077C213.405 15.0343 213.595 15.2211 213.823 15.3481C214.052 15.4752 214.311 15.5376 214.572 15.5288C214.807 15.5323 215.039 15.4821 215.252 15.3821C215.464 15.2821 215.651 15.135 215.798 14.9519C216.184 14.4265 216.41 13.8002 216.447 13.149C216.447 11.7789 215.726 10.8413 214.644 10.8413C214.393 10.8424 214.144 10.9016 213.919 11.0142C213.694 11.1267 213.498 11.2897 213.346 11.4904V9.03846ZM211.327 11.4904C211.135 11.2854 210.899 11.1268 210.636 11.0269C210.374 10.9269 210.092 10.8881 209.813 10.9135C209.238 10.8938 208.668 11.0178 208.154 11.274L208.442 11.9952C208.823 11.7951 209.24 11.6725 209.668 11.6346C209.804 11.6198 209.942 11.6357 210.072 11.6812C210.201 11.7267 210.318 11.8006 210.415 11.8975C210.512 11.9944 210.586 12.1117 210.631 12.241C210.677 12.3702 210.693 12.508 210.678 12.6442V12.7163H209.957C209.513 12.692 209.07 12.7659 208.659 12.9327C208.424 13.034 208.227 13.2075 208.098 13.4279C207.968 13.6483 207.912 13.9042 207.938 14.1587C207.935 14.3423 207.972 14.5243 208.046 14.6926C208.119 14.8608 208.228 15.0114 208.365 15.1343C208.501 15.2572 208.662 15.3495 208.837 15.4051C209.013 15.4607 209.197 15.4783 209.38 15.4567C209.637 15.4705 209.894 15.4257 210.131 15.3258C210.369 15.2258 210.58 15.0734 210.75 14.8798V15.3846H211.687C211.625 15.0033 211.601 14.6168 211.615 14.2308V12.9327C211.683 12.4332 211.581 11.9254 211.327 11.4904ZM210.606 13.2211V14.0865C210.505 14.2704 210.36 14.4262 210.184 14.5396C210.007 14.653 209.805 14.7203 209.596 14.7356C209.509 14.742 209.422 14.7297 209.34 14.6993C209.259 14.669 209.184 14.6214 209.123 14.5598C209.061 14.4982 209.014 14.424 208.983 14.3423C208.953 14.2607 208.941 14.1734 208.947 14.0865C208.947 13.5817 209.308 13.2933 210.173 13.2211H210.606ZM214.356 11.6346C214.933 11.6346 215.365 12.2115 215.365 13.149C215.365 14.0865 215.005 14.6635 214.428 14.6635C214.198 14.6585 213.974 14.588 213.782 14.4603C213.591 14.3326 213.439 14.1529 213.346 13.9423V12.3558C213.445 12.1642 213.589 11.999 213.764 11.8736C213.94 11.7483 214.142 11.6664 214.356 11.6346Z" fill="currentColor"/>
+  </svg>
+</span>
+<span>Переименование</span>
+</button>
+
+      <button
+        id="tab-button-layers"
+        class="main-tab-button"
+        type="button"
+        data-main-tab="layers"
+      >
+<span class="main-tab-icon layers" aria-hidden="true">
+  <svg viewBox="119 5 18 15">
+    <path d="M128 13.125C127.926 13.1246 127.852 13.1075 127.785 13.075L120.285 9.53C120.199 9.48962 120.126 9.42562 120.076 9.3455C120.025 9.26537 119.998 9.17241 119.998 9.0775C119.998 8.98258 120.025 8.88963 120.076 8.8095C120.126 8.72937 120.199 8.66537 120.285 8.625L127.785 5.08C127.851 5.04878 127.924 5.03259 127.998 5.03259C128.071 5.03259 128.144 5.04878 128.21 5.08L135.71 8.625C135.796 8.66537 135.869 8.72937 135.919 8.8095C135.97 8.88963 135.997 8.98258 135.997 9.0775C135.997 9.17241 135.97 9.26537 135.919 9.3455C135.869 9.42562 135.796 9.48962 135.71 9.53L128.21 13.075C128.144 13.1068 128.073 13.1238 128 13.125Z" fill="currentColor"/>
+    <path d="M128 16.08C127.925 16.0795 127.852 16.0625 127.785 16.03L120.285 12.5C120.224 12.4729 120.17 12.4339 120.124 12.3855C120.079 12.337 120.043 12.2799 120.02 12.2176C119.997 12.1554 119.987 12.0891 119.989 12.0227C119.992 11.9563 120.008 11.8911 120.036 11.831C120.065 11.7708 120.105 11.7169 120.154 11.6724C120.203 11.6279 120.261 11.5936 120.324 11.5716C120.386 11.5497 120.453 11.5404 120.519 11.5444C120.586 11.5484 120.65 11.5656 120.71 11.595L128 15.03L135.285 11.585C135.345 11.5568 135.41 11.5406 135.476 11.5375C135.543 11.5344 135.609 11.5444 135.671 11.567C135.734 11.5895 135.791 11.6241 135.84 11.6688C135.889 11.7135 135.929 11.7674 135.957 11.8275C135.986 11.8876 136.002 11.9526 136.005 12.0189C136.008 12.0852 135.998 12.1515 135.976 12.214C135.953 12.2764 135.918 12.3338 135.874 12.3829C135.829 12.432 135.775 12.4718 135.715 12.5L128.215 16.045C128.147 16.0723 128.073 16.0843 128 16.08Z" fill="currentColor"/>
+    <path d="M128 19.035C127.926 19.0346 127.852 19.0175 127.785 18.985L120.285 15.44C120.167 15.3821 120.077 15.2804 120.034 15.1568C119.991 15.0332 119.998 14.8975 120.053 14.7789C120.109 14.6604 120.209 14.5684 120.332 14.5228C120.455 14.4772 120.59 14.4816 120.71 14.535L128 18L135.285 14.555C135.345 14.5256 135.409 14.5085 135.476 14.5044C135.542 14.5004 135.609 14.5097 135.671 14.5317C135.734 14.5536 135.792 14.5879 135.841 14.6324C135.89 14.6769 135.93 14.7309 135.959 14.791C135.987 14.8511 136.003 14.9163 136.006 14.9827C136.008 15.0491 135.998 15.1154 135.975 15.1777C135.952 15.2399 135.916 15.297 135.871 15.3455C135.825 15.394 135.771 15.4329 135.71 15.46L128.215 19C128.147 19.0273 128.073 19.0393 128 19.035Z" fill="currentColor"/>
+  </svg>
+</span>
+<span>Слои</span>
+</button>
+
+      <button
+        id="tab-button-images"
+        class="main-tab-button"
+        type="button"
+        data-main-tab="images"
+      >
+<span class="main-tab-icon" aria-hidden="true">
+  <svg viewBox="364 5 12 15">
+    <path d="M375.84 8.76172L372.172 5.15737C372.069 5.05692 371.93 5 371.785 5H364.545C364.244 5 364 5.2394 364 5.53571V19.4643C364 19.7606 364.244 20 364.545 20H375.455C375.756 20 376 19.7606 376 19.4643V9.14007C376 8.99777 375.942 8.86217 375.84 8.76172ZM368.091 10.6585C368.468 10.6585 368.773 10.9581 368.773 11.3281C368.773 11.6981 368.468 11.9978 368.091 11.9978C367.714 11.9978 367.409 11.6981 367.409 11.3281C367.409 10.9581 367.714 10.6585 368.091 10.6585ZM373.136 15.5804H366.864C366.749 15.5804 366.686 15.4515 366.756 15.3644L368.457 13.2349C368.47 13.2189 368.486 13.206 368.505 13.1971C368.524 13.1882 368.544 13.1835 368.565 13.1835C368.585 13.1835 368.606 13.1882 368.624 13.1971C368.643 13.206 368.659 13.2189 368.672 13.2349L369.373 14.1122L370.699 12.4515C370.712 12.4354 370.728 12.4225 370.747 12.4136C370.765 12.4047 370.786 12.4001 370.806 12.4001C370.827 12.4001 370.847 12.4047 370.866 12.4136C370.885 12.4225 370.901 12.4354 370.914 12.4515L373.24 15.3644C373.314 15.4515 373.249 15.5804 373.136 15.5804ZM371.534 9.38616V6.23549L374.742 9.38616H371.534Z" fill="currentColor"/>
+  </svg>
+</span>
+<span>Изображения</span>
+</button>
+    </nav>
+
+    <section
+      id="tab-export"
+      class="main-tab-panel"
+    >
+      <fieldset id="settings">
+
+        <div class="ref-format">
+          <div class="ref-label">
+            Формат на выходе:
+          </div>
+
+          <div class="ref-radio-line">
+            <label class="radio">
+              <input
+                type="radio"
+                name="format"
+                value="PDF"
+                checked
+              >
+              <span>PDF</span>
+            </label>
+
+            <label class="radio">
+              <input
+                type="radio"
+                name="format"
+                value="SVG"
+              >
+              <span>SVG</span>
+            </label>
+          </div>
+        </div>
+
+
+        <div class="ref-color">
+          <div class="ref-label">
+            Цветовая палитра
+          </div>
+
+          <div class="ref-radio-line">
+            <label class="radio">
+              <input
+                id="color-rgb"
+                type="radio"
+                name="color"
+                value="RGB"
+              >
+              <span>RGB (sRGB)</span>
+            </label>
+
+            <label class="radio">
+              <input
+                id="color-cmyk"
+                type="radio"
+                name="color"
+                value="CMYK"
+                checked
+              >
+              <span>CMYK</span>
+            </label>
+          </div>
+        </div>
+
+
+        <label class="check ref-outline">
+          <input
+            id="outline"
+            type="checkbox"
+            checked
+          >
+
+          <span>
+            Преобразовать текст в кривые
+          </span>
+
+          <span
+            id="outline-help"
+            class="help"
+            tabindex="0"
+            data-tip="Преобразует текстовые объекты в векторные контуры перед экспортом. Внешний вид сохраняется, но текст больше нельзя будет редактировать как текст. Полезно для передачи файлов в типографию на печать – так шрифты не слетят"
+          >?</span>
+        </label>
+
+        <span
+          id="text-hint"
+          hidden
+        ></span>
+
+
+        <div
+          class="ref-line ref-line-top"
+          aria-hidden="true"
+        ></div>
+
+        <div
+          class="ref-line ref-line-mid"
+          aria-hidden="true"
+        ></div>
+
+        <div
+          class="ref-vline"
+          aria-hidden="true"
+        ></div>
+
+
+        <div
+          id="print-panel"
+          class="ref-print-panel"
+        >
+          <div class="ref-print-left">
+
+            <div class="ref-print-row ref-row-layer">
+              <label class="check">
+                <input
+                  id="print-layer-enabled"
+                  type="checkbox"
+                  checked
+                >
+                <span>Слой резки</span>
+              </label>
+
+              <input
+                id="print-layer-name"
+                class="ref-pill-input ref-pill-wide"
+                type="text"
+                value="rezka"
+                maxlength="64"
+                aria-label="Имя слоя резки"
+              >
+
+              <span
+                class="help ref-help-left"
+                tabindex="0"
+                data-tip="Имя слоя Figma, содержащего контур резки. При экспорте он будет вынесен отдельно для плоттера или типографии."
+              >?</span>
+            </div>
+
+
+            <div class="ref-print-row ref-row-spot">
+              <label class="check">
+                <input
+                  id="print-spot-enabled"
+                  type="checkbox"
+                  checked
+                >
+                <span>Spot color</span>
+              </label>
+
+              <input
+                id="print-spot-name"
+                class="ref-pill-input ref-pill-wide"
+                type="text"
+                value="CutContour"
+                maxlength="64"
+                aria-label="Имя Spot Color"
+              >
+
+              <span
+                class="help ref-help-left"
+                tabindex="0"
+                data-tip="Имя плашечного цвета, назначаемого контуру резки. Обычно типографии используют CutContour."
+              >?</span>
+            </div>
+
+
+            <div class="ref-print-row ref-row-overprint">
+              <label class="check">
+                <input
+                  id="print-overprint"
+                  type="checkbox"
+                  checked
+                >
+                <span>Overprint</span>
+              </label>
+
+              <span
+                class="help ref-help-left"
+                tabindex="0"
+                data-tip="Включает наложение краски для контура резки. CutContour не будет вырезать под собой фон при печати."
+              >?</span>
+            </div>
+
+
+            <div class="ref-print-row ref-row-stroke">
+              <span class="ref-row-title">
+                Толщина линии
+              </span>
+
+              <input
+                id="print-stroke-width"
+                type="hidden"
+                value="0.25"
+              >
+
+              <div class="ref-stroke-pill">
+                <button
+                  id="stroke-plus"
+                  type="button"
+                  tabindex="0"
+                >+</button>
+
+                <span id="stroke-value">0,25</span>
+
+                <button
+                  id="stroke-minus"
+                  type="button"
+                  tabindex="0"
+                >−</button>
+              </div>
+
+              <span class="ref-unit">
+                pt
+              </span>
+
+              <span
+                class="help ref-help-left"
+                tabindex="0"
+                data-tip="Толщина контура резки в итоговом PDF, в пунктах. Обычно достаточно 0,25 pt."
+              >?</span>
+            </div>
+
+          </div>
+
+
+          <div class="ref-print-right">
+
+            <div class="ref-right-row ref-row-optimize">
+              <label class="check">
+                <input
+                  id="print-optimize-images"
+                  type="checkbox"
+                  checked
+                >
+                <span>
+                  Уменьшить вес картинок
+                </span>
+              </label>
+
+              <span
+                class="help ref-help-right"
+                tabindex="0"
+                data-tip="Уменьшает слишком большие растровые изображения до размера, достаточного для макета. Оригинальные изображения и объекты в Figma не изменяются. Примените, если экспорт идет долго или упирается в лимит 100мб."
+              >?</span>
+            </div>
+
+
+            <div class="ref-right-row ref-row-frame-size">
+              <label class="radio ref-size-radio">
+                <input
+                  id="print-frame-size-enabled"
+                  type="radio"
+                  name="print-size-mode"
+                  value="frame"
+                  checked
+                >
+                <span>
+                  Размер по фрейму (px = мм)
+                </span>
+              </label>
+
+              <span
+                class="help ref-help-right"
+                tabindex="0"
+                data-tip="Физический размер PDF берётся из размера фрейма: 1 px в Figma = 1 мм в итоговом файле."
+              >?</span>
+            </div>
+
+
+            <div class="ref-right-row ref-row-manual-size">
+              <label class="radio ref-size-radio">
+                <input
+                  id="print-final-size-enabled"
+                  type="radio"
+                  name="print-size-mode"
+                  value="manual"
+                >
+
+                <span>
+                  Ш×В (мм)
+                </span>
+              </label>
+
+              <input
+                id="print-final-width"
+                class="ref-pill-input ref-dimension"
+                type="number"
+                value="100"
+                min="1"
+                max="10000"
+                step="0.1"
+                aria-label="Ширина"
+              >
+
+              <span class="ref-times">×</span>
+
+              <input
+                id="print-final-height"
+                class="ref-pill-input ref-dimension"
+                type="number"
+                value="100"
+                min="1"
+                max="10000"
+                step="0.1"
+                aria-label="Высота"
+              >
+
+              <span
+                class="help ref-help-right"
+                tabindex="0"
+                data-tip="Позволяет вручную задать физическую ширину и высоту итогового PDF в миллиметрах."
+              >?</span>
+            </div>
+
+            <input
+              id="print-final-lock-ratio"
+              type="checkbox"
+              checked
+              hidden
+            >
+
+
+            <div class="ref-right-row ref-row-scale">
+              <label class="check">
+                <input
+                  id="print-scale-enabled"
+                  type="checkbox"
+                  checked
+                >
+                <span>
+                  Масштаб
+                </span>
+              </label>
+
+              <input
+                id="print-scale"
+                class="ref-pill-input ref-scale-input"
+                type="number"
+                value="1"
+                min="0.01"
+                max="100"
+                step="0.01"
+                aria-label="Масштаб"
+              >
+
+              <div class="ref-scale-presets">
+                <button
+                  type="button"
+                  data-scale="0.5"
+                >0,5</button>
+
+                <button
+                  type="button"
+                  data-scale="1"
+                >1</button>
+
+                <button
+                  type="button"
+                  data-scale="2"
+                >2</button>
+
+                <button
+                  type="button"
+                  data-scale="3"
+                >3</button>
+              </div>
+
+              <span
+                class="help ref-help-right"
+                tabindex="0"
+                data-tip="Дополнительный множитель итогового физического размера. Можно выбрать 0,5 / 1 / 2 / 3 или ввести своё значение."
+              >?</span>
+            </div>
+
+
+            <!-- DPI удалён из интерфейса.
+                 Значение 300 сохраняется внутренним дефолтом
+                 для совместимости существующего pipeline. -->
+            <input
+              id="print-min-dpi"
+              type="hidden"
+              value="300"
+            >
+
+          </div>
+        </div>
+
+
+        <div
+          id="profile-panel"
+          class="ref-profile-panel"
+        >
+          <span class="ref-profile-title">
+            ICC-профиль CMYK
+          </span>
+
+          <div class="ref-profile-select-wrap">
+            <select
+              id="icc-profile-select"
+              aria-label="ICC-профиль CMYK"
+            >
+              <option value="default">
+                Добавить
+              </option>
+
+              <option value="__add__">
+                + Добавить…
+              </option>
+            </select>
+          </div>
+
+          <input
+            id="icc-file"
+            type="file"
+            accept=".icc,.icm"
+            hidden
+          >
+
+          <span
+            class="help ref-profile-help"
+            tabindex="0"
+            data-tip="Цветовой профиль для преобразования в CMYK. Можно выбрать ранее добавленный профиль или загрузить новый ICC/ICM-файл типографии."
+          >?</span>
+
+          <span
+            id="profile-hint"
+            hidden
+          ></span>
+        </div>
+
+
+        <div
+          id="converter-panel"
+          class="ref-converter-panel"
+        >
+          <span class="ref-converter-title">
+            Локальный конвертер
+          </span>
+
+          <button
+            id="converter-reinstall"
+            class="ref-icon-button ref-refresh"
+            type="button"
+            title="Переустановить локальный конвертер"
+          >
+            <svg
+              viewBox="440 379 13 13"
+              aria-hidden="true"
+            >
+              <path
+                d="M442.962 381.963C443.419 381.506 443.956 381.144 444.55 380.894C445.169 380.631 445.819 380.5 446.494 380.5V379.25C445.65 379.25 444.831 379.412 444.062 379.744C443.319 380.056 442.65 380.512 442.075 381.081C441.5 381.656 441.05 382.325 440.737 383.069C440.412 383.837 440.244 384.656 440.244 385.5C440.244 386.344 440.406 387.163 440.737 387.931C441.05 388.675 441.5 389.344 442.075 389.919C442.181 390.025 442.294 390.119 442.4 390.219L440.869 391.75H444.619V388L443.287 389.331C443.175 389.237 443.062 389.137 442.962 389.031C442.506 388.575 442.141 388.037 441.887 387.444C441.625 386.825 441.494 386.175 441.494 385.5C441.494 384.825 441.625 384.169 441.887 383.556C442.137 382.963 442.5 382.425 442.962 381.969V381.963ZM450.919 381.081C450.812 380.975 450.7 380.881 450.594 380.781L452.125 379.25H448.375V383L449.706 381.669C449.819 381.762 449.931 381.862 450.031 381.969C450.494 382.431 450.85 382.963 451.106 383.556C451.369 384.175 451.5 384.825 451.5 385.5C451.5 386.175 451.369 386.831 451.106 387.444C450.856 388.037 450.494 388.575 450.031 389.031C449.575 389.487 449.037 389.85 448.444 390.1C447.825 390.363 447.175 390.494 446.5 390.494V391.744C447.344 391.744 448.162 391.581 448.931 391.25C449.675 390.938 450.344 390.481 450.919 389.912C451.494 389.337 451.944 388.669 452.256 387.925C452.581 387.156 452.75 386.337 452.75 385.494C452.75 384.65 452.587 383.831 452.256 383.063C451.944 382.319 451.49 381.644 450.919 381.075V381.081Z"
+                fill="currentColor"
+              />
+            </svg>
+          </button>
+
+          <button
+            id="converter-remove"
+            class="ref-icon-button ref-trash"
+            type="button"
+            title="Удалить локальный конвертер"
+          >
+            <svg
+              viewBox="465 378 13 15"
+              aria-hidden="true"
+            >
+              <path
+                d="M466.812 391.828C466.811 392.013 466.883 392.191 467.013 392.323C467.142 392.454 467.319 392.529 467.503 392.531H475.497C475.681 392.529 475.858 392.454 475.987 392.323C476.117 392.191 476.189 392.013 476.187 391.828V382.453H466.812V391.828ZM467.75 383.391H475.25V391.594H467.75V383.391Z"
+                fill="currentColor"
+              />
+              <path
+                d="M468.922 384.328H469.859V390.188H468.922V384.328ZM471.031 384.328H471.969V390.188H471.031V384.328ZM473.141 384.328H474.078V390.188H473.141V384.328ZM473.609 380.578V379.172C473.609 378.778 473.331 378.469 472.977 378.469H470.023C469.669 378.469 469.391 378.778 469.391 379.172V380.578H465.875V381.516H477.125V380.578H473.609ZM470.328 379.406H472.672V380.578H470.328V379.406Z"
+                fill="currentColor"
+              />
+            </svg>
+          </button>
+        </div>
+
+      </fieldset>
+
+
+      <aside class="export-selection">
+        <div class="selection-head">
+          <span id="selection">
+            Выбрано слоев: 0
+          </span>
+        </div>
+
+        <div id="selection-list">
+          <span class="muted">
+            Ничего не выбрано
+          </span>
+        </div>
+      </aside>
+
+
+      <button
+        id="export"
+        type="button"
+        disabled
+      >
+        Экспортировать
+      </button>
+
+      <button
+        id="close"
+        type="button"
+        hidden
+      >
+        Закрыть
+      </button>
+
+      <p
+        id="status"
+        role="status"
+        aria-live="polite"
+      ></p>
+
+    </section>
+
+
+    <section
+      id="tab-text"
+      class="main-tab-panel edit-tab"
+      hidden
+    >
+      <div class="compact-page">
+
+        <div class="compact-page-head">
+          <span>Замена текста</span>
+
+          <span
+            class="help compact-help"
+            tabindex="0"
+            data-tip="Поиск и массовая замена текста. По умолчанию изменения применяются только внутри текущего выделения."
+          >?</span>
+        </div>
+
+
+        <section class="compact-group">
+          <div class="compact-group-title">
+            Поиск и замена
+          </div>
+
+          <div class="compact-row">
+            <label for="text-scope">
+              Область
+
+              <span
+                class="help compact-help"
+                tabindex="0"
+                data-tip="Выделение — только выбранные объекты. Текущая страница — все подходящие слои на странице. Весь документ — поиск по всем страницам файла."
+              >?</span>
+            </label>
+
+            <select id="text-scope">
+              <option value="selection">Выделение</option>
+              <option value="page">Текущая страница</option>
+              <option value="document">Весь документ</option>
+            </select>
+          </div>
+
+
+          <div class="compact-two">
+
+            <div class="compact-field">
+              <label for="text-find">
+                Найти
+
+                <span
+                  class="help compact-help"
+                  tabindex="0"
+                  data-tip="Текст, который нужно найти. Можно использовать ↵ для переноса строки и ⇥ для табуляции."
+                >?</span>
+              </label>
+
+              <textarea
+                id="text-find"
+                class="compact-textarea"
+                spellcheck="false"
+              ></textarea>
+
+              <div class="compact-token-row">
+                <button
+                  class="compact-token"
+                  type="button"
+                  data-token-target="text-find"
+                  data-token="↵"
+                >↵</button>
+
+                <button
+                  class="compact-token"
+                  type="button"
+                  data-token-target="text-find"
+                  data-token="⇥"
+                >⇥</button>
+              </div>
+            </div>
+
+
+            <div class="compact-field">
+              <label for="text-replace">
+                Заменить на
+
+                <span
+                  class="help compact-help"
+                  tabindex="0"
+                  data-tip="Новый текст. Оставьте поле пустым, если найденный текст нужно удалить. Поддерживаются ↵ и ⇥."
+                >?</span>
+              </label>
+
+              <textarea
+                id="text-replace"
+                class="compact-textarea"
+                spellcheck="false"
+              ></textarea>
+
+              <div class="compact-token-row">
+                <button
+                  class="compact-token"
+                  type="button"
+                  data-token-target="text-replace"
+                  data-token="↵"
+                >↵</button>
+
+                <button
+                  class="compact-token"
+                  type="button"
+                  data-token-target="text-replace"
+                  data-token="⇥"
+                >⇥</button>
+              </div>
+            </div>
+
+          </div>
+
+
+          <div class="compact-check-grid">
+
+            <label class="compact-check">
+              <input
+                id="text-case-sensitive"
+                type="checkbox"
+              >
+              <span>Учитывать регистр</span>
+
+              <span
+                class="help compact-help"
+                tabindex="0"
+                data-tip="Если включено, ABC и abc считаются разными строками."
+              >?</span>
+            </label>
+
+
+            <label class="compact-check">
+              <input
+                id="text-whole-word"
+                type="checkbox"
+              >
+              <span>Целое слово</span>
+
+              <span
+                class="help compact-help"
+                tabindex="0"
+                data-tip="Совпадение должно быть отдельным словом, а не частью другого слова."
+              >?</span>
+            </label>
+
+
+            <label class="compact-check">
+              <input
+                id="text-regex"
+                type="checkbox"
+              >
+              <span>Regex</span>
+
+              <span
+                class="help compact-help"
+                tabindex="0"
+                data-tip="Использует регулярные выражения вместо обычного поиска. Примеры: \d+ — любое число, \s+ — пробелы, .* — любой текст, (...) — группа захвата. В поле замены можно использовать $1, $2 и далее для групп, $& — всё найденное совпадение, $<name> — именованную группу."
+              >?</span>
+            </label>
+
+
+            <label class="compact-check">
+              <input
+                id="text-exact-layer"
+                type="checkbox"
+              >
+              <span>Весь текст слоя</span>
+
+              <span
+                class="help compact-help"
+                tabindex="0"
+                data-tip="Слой будет изменён только если он целиком состоит из поискового запроса. Например, при поиске «Хуй» слой «Хуй» изменится, а слой «Хуй моржовый» — нет."
+              >?</span>
+            </label>
+
+
+            <label class="compact-check">
+              <input
+                id="text-include-hidden"
+                type="checkbox"
+              >
+              <span>Скрытые слои</span>
+
+              <span
+                class="help compact-help"
+                tabindex="0"
+                data-tip="Включает в поиск скрытые текстовые слои."
+              >?</span>
+            </label>
+
+          </div>
+        </section>
+
+
+        <section class="compact-group">
+          <div class="compact-group-title">
+            Фильтр слоёв
+
+            <span
+              class="help compact-help"
+              tabindex="0"
+              data-tip="Группа настроек, которая ограничивает, в каких текстовых слоях выполнять поиск. Фильтрация идёт по имени слоя, а не по тексту внутри него."
+            >?</span>
+          </div>
+
+          <div class="compact-two">
+            <div class="compact-field">
+              <label for="text-layer-name-include">
+                Имя содержит
+                <span
+                  class="help compact-help"
+                  tabindex="0"
+                  data-tip="Искать текст только в слоях, имя которых содержит указанную строку. Например, значение Title подойдёт для Title, Product Title и TITLE. Регистр имени не учитывается."
+                >?</span>
+              </label>
+
+              <input
+                id="text-layer-name-include"
+                type="text"
+                autocomplete="off"
+                placeholder="Например Title"
+              >
+            </div>
+
+            <div class="compact-field">
+              <label for="text-layer-name-exclude">
+                Имя не содержит
+                <span
+                  class="help compact-help"
+                  tabindex="0"
+                  data-tip="Не искать текст в слоях, имя которых содержит указанную строку. Например, значение Button исключит Button, Main Button и BUTTON. Регистр имени не учитывается."
+                >?</span>
+              </label>
+
+              <input
+                id="text-layer-name-exclude"
+                type="text"
+                autocomplete="off"
+              >
+            </div>
+          </div>
+        </section>
+
+
+        <section class="compact-group compact-preview-group">
+          <div class="compact-group-title">
+            Предпросмотр
+          </div>
+
+          <div
+            id="text-preview"
+            class="compact-preview"
+          >
+            Введите текст для поиска.
+          </div>
+        </section>
+
+
+        <div class="compact-actions">
+          <button
+            id="text-apply"
+            type="button"
+          >
+            Заменить текст
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+<section
+      id="tab-layers"
+      class="main-tab-panel edit-tab"
+      hidden
+    >
+      <div class="compact-page">
+
+        <div class="compact-page-head">
+          <span>Переименование слоёв</span>
+
+          <span
+            class="help compact-help"
+            tabindex="0"
+            data-tip="Массовое переименование выбранных объектов. Перед применением результат можно проверить в предпросмотре."
+          >?</span>
+        </div>
+
+
+        <section class="compact-group">
+          <div class="compact-group-title">
+            Способ переименования
+          </div>
+
+          <div class="compact-row">
+            <label for="rename-mode">
+              Режим
+
+              <span
+                class="help compact-help"
+                tabindex="0"
+                data-tip="Определяет, как будет сформировано новое имя: замена текста, префикс/суффикс, полное имя, нумерация, шаблон или значение дочернего слоя."
+              >?</span>
+            </label>
+
+            <select id="rename-mode">
+              <option value="replace">Найти → заменить</option>
+              <option value="prefix-suffix">Префикс / суффикс</option>
+              <option value="set">Задать имя полностью</option>
+              <option value="number">Нумерация</option>
+              <option value="template">Шаблон</option>
+              <option value="by-layer">По дочернему слою</option>
+            </select>
+          </div>
+
+
+          <label class="compact-check compact-single-check">
+            <input
+              id="rename-include-descendants"
+              type="checkbox"
+            >
+
+            <span>
+              Включая вложенные
+            </span>
+
+            <span
+              class="help compact-help"
+              tabindex="0"
+              data-tip="Применяет переименование не только к выбранным объектам, но и к их дочерним слоям."
+            >?</span>
+          </label>
+        </section>
+
+
+        <section
+          id="rename-group-replace"
+          class="compact-group"
+          data-rename-group="replace"
+        >
+          <div class="compact-group-title">
+            Найти → заменить
+          </div>
+
+          <div class="compact-two">
+
+            <div class="compact-field">
+              <label for="rename-find">
+                Найти
+              </label>
+
+              <input
+                id="rename-find"
+                type="text"
+                autocomplete="off"
+                placeholder="Rectangle"
+              >
+            </div>
+
+            <div class="compact-field">
+              <label for="rename-replace">
+                Заменить
+              </label>
+
+              <input
+                id="rename-replace"
+                type="text"
+                autocomplete="off"
+              >
+            </div>
+
+          </div>
+
+          <div class="compact-check-grid">
+
+            <label class="compact-check">
+              <input
+                id="rename-regex"
+                type="checkbox"
+              >
+              <span>Regex</span>
+
+              <span
+                class="help compact-help"
+                tabindex="0"
+                data-tip="Использует регулярное выражение вместо обычного поиска по имени слоя. Примеры: \d+ — любое число, .* — любой текст, ^icon- — имя начинается с icon-, -old$ — имя заканчивается на -old. Группы можно использовать для поиска сложных шаблонов."
+              >?</span>
+            </label>
+
+            <label class="compact-check">
+              <input
+                id="rename-case-sensitive"
+                type="checkbox"
+              >
+              <span>Учитывать регистр</span>
+            </label>
+
+          </div>
+        </section>
+
+
+        <section
+          id="rename-group-prefix-suffix"
+          class="compact-group"
+          data-rename-group="prefix-suffix"
+          hidden
+        >
+          <div class="compact-group-title">
+            Префикс / суффикс
+
+            <span
+              class="help compact-help"
+              tabindex="0"
+              data-tip="Префикс добавляет указанный текст перед текущим именем слоя. Суффикс добавляет указанный текст после текущего имени слоя."
+            >?</span>
+          </div>
+
+          <div class="compact-two">
+            <div class="compact-field">
+              <label for="rename-prefix">
+                Префикс
+              </label>
+
+              <input
+                id="rename-prefix"
+                type="text"
+                autocomplete="off"
+              >
+            </div>
+
+            <div class="compact-field">
+              <label for="rename-suffix">
+                Суффикс
+              </label>
+
+              <input
+                id="rename-suffix"
+                type="text"
+                autocomplete="off"
+              >
+            </div>
+          </div>
+        </section>
+
+
+        <section
+          id="rename-group-set"
+          class="compact-group"
+          data-rename-group="set"
+          hidden
+        >
+          <div class="compact-group-title">
+            Задать имя полностью
+          </div>
+
+          <div class="compact-row">
+            <label for="rename-full-name">
+              Новое имя
+            </label>
+
+            <input
+              id="rename-full-name"
+              type="text"
+              autocomplete="off"
+            >
+          </div>
+        </section>
+
+
+        <section
+          id="rename-group-number"
+          class="compact-group"
+          data-rename-group="number"
+          hidden
+        >
+          <div class="compact-group-title">
+            Нумерация
+
+            <span
+              class="help compact-help"
+              tabindex="0"
+              data-tip="Формирует имена из общей основы и последовательного номера. Start — первое число последовательности. Digits — количество цифр в номере. Например, 2 превращает 1 в 01."
+            >?</span>
+          </div>
+
+          <div class="compact-number-grid">
+
+            <div class="compact-field">
+              <label for="rename-number-base">
+                Основа
+              </label>
+
+              <input
+                id="rename-number-base"
+                type="text"
+                value="Layer "
+              >
+            </div>
+
+            <div class="compact-field">
+              <label for="rename-number-start">
+                Start
+              </label>
+
+              <input
+                id="rename-number-start"
+                type="number"
+                value="1"
+                step="1"
+              >
+            </div>
+
+            <div class="compact-field">
+              <label for="rename-number-pad">
+                Digits
+              </label>
+
+              <input
+                id="rename-number-pad"
+                type="number"
+                value="2"
+                min="1"
+                max="12"
+                step="1"
+              >
+            </div>
+
+          </div>
+        </section>
+
+
+        <section
+          id="rename-group-template"
+          class="compact-group"
+          data-rename-group="template"
+          hidden
+        >
+          <div class="compact-group-title">
+            Шаблон
+
+            <span
+              class="help compact-help"
+              tabindex="0"
+              data-tip="Создаёт имя по шаблону. Доступны переменные {name}, {index}, {width}, {height} и {type}."
+            >?</span>
+          </div>
+
+          <div class="compact-row">
+            <label for="rename-template">
+              Формула
+            </label>
+
+            <input
+              id="rename-template"
+              type="text"
+              value="{name}-{index}"
+              autocomplete="off"
+            >
+          </div>
+        </section>
+
+
+        <section
+          id="rename-group-by-layer"
+          class="compact-group"
+          data-rename-group="by-layer"
+          hidden
+        >
+          <div class="compact-group-title">
+            Имя из дочернего слоя
+
+            <span
+              class="help compact-help"
+              tabindex="0"
+              data-tip="Ищет внутри объекта слой с заданным именем. Для TEXT берётся его текст, для других типов — имя найденного слоя."
+            >?</span>
+          </div>
+
+          <div class="compact-two">
+
+            <div class="compact-field">
+              <label for="rename-source-layer-name">
+                Источник имени
+              </label>
+
+              <input
+                id="rename-source-layer-name"
+                type="text"
+                value="Name"
+                autocomplete="off"
+              >
+            </div>
+
+
+            <div class="compact-field">
+              <label for="rename-source-depth">
+                Где искать
+
+                <span
+                  class="help compact-help"
+                  tabindex="0"
+                  data-tip="Первый уровень ищет только среди непосредственных дочерних слоёв. Любая глубина ищет во всём дереве объекта."
+                >?</span>
+              </label>
+
+              <select id="rename-source-depth">
+                <option value="first">Первый уровень</option>
+                <option value="any">Любая глубина</option>
+              </select>
+            </div>
+
+
+            <div class="compact-field">
+              <label for="rename-missing-source">
+                Если не найден
+
+                <span
+                  class="help compact-help"
+                  tabindex="0"
+                  data-tip="Определяет поведение, если нужный дочерний слой отсутствует: пропустить объект или оставить текущее имя."
+                >?</span>
+              </label>
+
+              <select id="rename-missing-source">
+                <option value="skip">Пропустить</option>
+                <option value="keep">Оставить имя</option>
+              </select>
+            </div>
+
+
+            <div>
+              <label class="compact-check compact-by-layer-check">
+                <input
+                  id="rename-folder-enabled"
+                  type="checkbox"
+                >
+
+                <span>
+                  Папка из слоя
+                </span>
+
+                <span
+                  class="help compact-help"
+                  tabindex="0"
+                  data-tip="Добавляет перед новым именем значение другого дочернего слоя. Например Type=Phones и Name=iPhone → Phones/iPhone."
+                >?</span>
+              </label>
+
+              <div
+                id="rename-folder-settings"
+                class="compact-folder-field"
+                hidden
+              >
+                <input
+                  id="rename-folder-layer-name"
+                  type="text"
+                  value="Type"
+                  autocomplete="off"
+                  aria-label="Источник папки"
+                >
+              </div>
+
+              <div
+                id="rename-dependencies-block"
+                class="rename-dependencies-block"
+              >
+                <div class="rename-dependencies-title">
+                  <span>Зависимости</span>
+
+                  <span
+                    class="help compact-help"
+                    tabindex="0"
+                    data-tip="Добавляет значения других дочерних слоёв перед основным именем. Для каждой зависимости можно выбрать слой и разделитель. Зависимостей может быть несколько."
+                  >?</span>
+                </div>
+
+                <div class="rename-dependencies-head">
+                  <span>Слой</span>
+                  <span>Разделитель</span>
+                  <span></span>
+                </div>
+
+                <div id="rename-dependencies"></div>
+
+                <button
+                  id="rename-add-dependency"
+                  class="rename-add-dependency"
+                  type="button"
+                >
+                  + Добавить зависимость
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+        </section>
+
+
+        <section class="compact-group">
+          <div class="compact-group-title">
+            Финальная обработка
+
+            <span
+              class="help compact-help"
+              tabindex="0"
+              data-tip="Эти правила применяются после основного переименования и приводят итоговые имена к единому формату."
+            >?</span>
+          </div>
+
+
+          <div class="compact-check-grid">
+
+            <label class="compact-check">
+              <input
+                id="rename-trim"
+                type="checkbox"
+                checked
+              >
+              <span>Обрезать края</span>
+
+              <span
+                class="help compact-help"
+                tabindex="0"
+                data-tip="Удаляет пробелы в начале и конце итогового имени."
+              >?</span>
+            </label>
+
+
+            <label class="compact-check">
+              <input
+                id="rename-collapse-spaces"
+                type="checkbox"
+                checked
+              >
+              <span>Схлопнуть пробелы</span>
+
+              <span
+                class="help compact-help"
+                tabindex="0"
+                data-tip="Заменяет несколько последовательных пробелов одним."
+              >?</span>
+            </label>
+
+          </div>
+
+
+          <div class="compact-two compact-final-grid">
+
+            <div class="compact-field">
+              <label for="rename-space-mode">
+                Пробелы
+
+                <span
+                  class="help compact-help"
+                  tabindex="0"
+                  data-tip="Позволяет оставить пробелы, заменить их на дефис или подчёркивание либо полностью удалить."
+                >?</span>
+              </label>
+
+              <select id="rename-space-mode">
+                <option value="keep">Оставить</option>
+                <option value="dash">→ -</option>
+                <option value="underscore">→ _</option>
+                <option value="remove">Удалить</option>
+              </select>
+            </div>
+
+
+            <div class="compact-field">
+              <label for="rename-slash-mode">
+                Слеш /
+
+                <span
+                  class="help compact-help"
+                  tabindex="0"
+                  data-tip="Позволяет сохранить слеш как иерархию либо заменить его на дефис, подчёркивание или удалить. Если оставить, то слой с именем Type/Model экспортируется с именем Model во вновь созданную папку Type."
+                >?</span>
+              </label>
+
+              <select id="rename-slash-mode">
+                <option value="keep">Иерархия</option>
+                <option value="dash">→ -</option>
+                <option value="underscore">→ _</option>
+                <option value="remove">Удалить</option>
+              </select>
+            </div>
+
+
+            <div class="compact-field">
+              <label for="rename-remove-characters">
+                Удалить символы
+
+                <span
+                  class="help compact-help"
+                  tabindex="0"
+                  data-tip="Каждый символ, указанный в этом поле, будет удалён из итогового имени."
+                >?</span>
+              </label>
+
+              <input
+                id="rename-remove-characters"
+                type="text"
+                autocomplete="off"
+                placeholder=",.;"
+              >
+            </div>
+
+
+            <div class="compact-field">
+              <label for="rename-case-mode">
+                Регистр
+
+                <span
+                  class="help compact-help"
+                  tabindex="0"
+                  data-tip="Позволяет сохранить исходный регистр, преобразовать имя в lowercase, UPPERCASE или Capitalize Words."
+                >?</span>
+              </label>
+
+              <select id="rename-case-mode">
+                <option value="keep">Не менять</option>
+                <option value="lower">lowercase</option>
+                <option value="upper">UPPERCASE</option>
+                <option value="capitalize">Capitalize Words</option>
+              </select>
+            </div>
+
+
+            <div class="compact-field">
+              <label for="rename-final-prefix">
+                Финальный префикс
+
+                <span
+                  class="help compact-help"
+                  tabindex="0"
+                  data-tip="Добавляется перед уже полностью сформированным и обработанным именем."
+                >?</span>
+              </label>
+
+              <input
+                id="rename-final-prefix"
+                type="text"
+                autocomplete="off"
+              >
+            </div>
+
+
+            <div class="compact-field">
+              <label for="rename-final-suffix">
+                Финальный суффикс
+
+                <span
+                  class="help compact-help"
+                  tabindex="0"
+                  data-tip="Добавляется после уже полностью сформированного и обработанного имени."
+                >?</span>
+              </label>
+
+              <input
+                id="rename-final-suffix"
+                type="text"
+                autocomplete="off"
+              >
+            </div>
+
+          </div>
+        </section>
+
+
+        <section class="compact-group compact-preview-group">
+          <div class="compact-group-title">
+            Предпросмотр
+          </div>
+
+          <div
+            id="rename-preview"
+            class="compact-preview"
+          >
+            Измените параметры — здесь появится предпросмотр.
+          </div>
+        </section>
+
+
+        <div class="compact-actions">
+          <button
+            id="rename-apply"
+            type="button"
+          >
+            Переименовать
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+<section
+      id="tab-images"
+      class="main-tab-panel edit-tab"
+      hidden
+    >
+      <div class="compact-page">
+
+        <div class="compact-page-head">
+          <span>Изображения</span>
+
+          <span
+            class="help compact-help"
+            tabindex="0"
+            data-tip="Настройки IMAGE-заливок в текущем выделении и во вложенных объектах."
+          >?</span>
+        </div>
+
+
+        <div class="compact-image-columns">
+
+          <section class="compact-group">
+            <div class="compact-group-title">
+              Режим изображения
+
+              <span
+                class="help compact-help"
+                tabindex="0"
+                data-tip="Fit показывает изображение целиком. Fill заполняет объект с возможной обрезкой краёв. Crop позволяет управлять кадрированием. Tile повторяет изображение плиткой."
+              >?</span>
+            </div>
+
+            <div class="compact-field">
+              <label for="image-mode">
+                Режим
+              </label>
+
+              <select id="image-mode">
+                <option value="KEEP">Не менять</option>
+                <option value="FIT">Fit · вписать</option>
+                <option value="FILL">Fill · заполнить</option>
+                <option value="CROP">Crop · кадрировать</option>
+                <option value="TILE">Tile · плитка</option>
+              </select>
+            </div>
+
+
+            <label class="compact-check compact-single-check">
+              <input
+                id="image-include-descendants"
+                type="checkbox"
+                checked
+              >
+
+              <span>
+                Искать внутри фреймов
+              </span>
+
+              <span
+                class="help compact-help"
+                tabindex="0"
+                data-tip="Ищет IMAGE-заливки не только в выбранном объекте, но и во всех его вложенных слоях."
+              >?</span>
+            </label>
+          </section>
+
+
+          <section class="compact-group">
+            <div class="compact-group-title">
+              Размер bitmap
+
+              <span
+                class="help compact-help"
+                tabindex="0"
+                data-tip="Позволяет уменьшить физический размер слишком большого исходного изображения без изменения размера объекта в Figma."
+              >?</span>
+            </div>
+
+            <label class="compact-check compact-single-check">
+              <input
+                id="image-optimize"
+                type="checkbox"
+              >
+
+              <span>
+                Уменьшить исходник
+              </span>
+
+              <span
+                class="help compact-help"
+                tabindex="0"
+                data-tip="Создаёт уменьшенную версию bitmap под фактический размер объекта. TILE при оптимизации пропускается."
+              >?</span>
+            </label>
+
+
+            <div
+              id="image-optimize-settings"
+              class="compact-row compact-density"
+              hidden
+            >
+              <label for="image-optimize-scale">
+                Плотность
+
+                <span
+                  class="help compact-help"
+                  tabindex="0"
+                  data-tip="1× создаёт bitmap примерно под фактический размер объекта. 2× сохраняет двойной запас разрешения."
+                >?</span>
+              </label>
+
+              <select id="image-optimize-scale">
+                <option value="1">1×</option>
+                <option value="2">2×</option>
+              </select>
+            </div>
+          </section>
+
+        </div>
+
+
+        <section
+          id="image-anchor-section"
+          class="compact-group"
+          hidden
+        >
+          <div class="compact-group-title">
+            Позиционирование
+
+            <span
+              class="help compact-help"
+              tabindex="0"
+              data-tip="Определяет, к какой стороне или углу привязано изображение при Fill или Crop. Центральная точка оставляет изображение по центру."
+            >?</span>
+          </div>
+
+          <div
+            id="image-anchor-grid"
+            class="compact-anchor-grid"
+            role="group"
+            aria-label="Позиция изображения"
+          >
+            <button class="anchor-button" type="button" data-anchor-x="0" data-anchor-y="0">↖</button>
+            <button class="anchor-button" type="button" data-anchor-x="0.5" data-anchor-y="0">↑</button>
+            <button class="anchor-button" type="button" data-anchor-x="1" data-anchor-y="0">↗</button>
+
+            <button class="anchor-button" type="button" data-anchor-x="0" data-anchor-y="0.5">←</button>
+            <button class="anchor-button active" type="button" data-anchor-x="0.5" data-anchor-y="0.5">●</button>
+            <button class="anchor-button" type="button" data-anchor-x="1" data-anchor-y="0.5">→</button>
+
+            <button class="anchor-button" type="button" data-anchor-x="0" data-anchor-y="1">↙</button>
+            <button class="anchor-button" type="button" data-anchor-x="0.5" data-anchor-y="1">↓</button>
+            <button class="anchor-button" type="button" data-anchor-x="1" data-anchor-y="1">↘</button>
+          </div>
+        </section>
+
+
+        <section class="compact-group compact-preview-group">
+          <div class="compact-group-title">
+            Предпросмотр
+          </div>
+
+          <div
+            id="image-preview"
+            class="compact-preview"
+          >
+            Выберите слой с IMAGE-заливкой.
+          </div>
+        </section>
+
+
+        <div class="compact-actions">
+          <button
+            id="image-apply"
+            type="button"
+          >
+            Применить
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+
+  </main>
+
+  <aside class="results">
+    <div class="results-head">
+      <h2>Готовые файлы:</h2>
+
+      <button
+        id="clear-downloads"
+        type="button"
+      >
+        Очистить
+      </button>
+    </div>
+
+    <div
+      id="downloads-empty"
+      hidden
+    ></div>
+
+    <div id="downloads"></div>
+  </aside>
+
+</div>
+
+<div id="remove-helper-modal" class="modal" hidden>
+  <div class="modal-card">
+    <h2>Удаление локального конвертера</h2>
+
+    <p>
+      Из Figma нельзя безопасно удалить системные файлы Helper,
+      поэтому удаление выполняется вручную.
+    </p>
+
+    <h3>macOS</h3>
+
+    <p>Откройте Terminal и выполните:</p>
+
+    <pre>launchctl bootout gui/$(id -u) ~/Library/LaunchAgents/com.layerexport.launcher.plist 2>/dev/null
+rm -f ~/Library/LaunchAgents/com.layerexport.launcher.plist
+rm -rf ~/Library/Application\ Support/Layer\ Export</pre>
+
+    <h3>Windows</h3>
+
+    <p>
+      Если Helper установлен через установщик:
+      откройте <b>Параметры → Приложения → Установленные приложения</b>,
+      найдите <b>Layer Export Helper</b> и нажмите <b>Удалить</b>.
+    </p>
+
+    <p>
+      Для portable-версии удалите папку
+      <code>%LOCALAPPDATA%\Layer Export</code>.
+    </p>
+
+    <div class="modal-actions">
+      <button id="remove-helper-close" type="button">
+        Закрыть
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<div id="install-helper-modal" class="modal" hidden>
+  <div class="modal-card">
+
+    <h2 id="install-helper-title">
+      Установка Layer Export Helper
+    </h2>
+
+    <p>
+      <b>Зачем он нужен?</b>
+    </p>
+
+    <p>
+      Figma работает в изолированной среде и сама не умеет выполнять
+      часть полиграфических операций, которые нужны этому плагину:
+      преобразование в CMYK по ICC-профилю, сохранение редактируемого
+      текста в PDF, Spot Color, Overprint и подготовку слоя резки.
+    </p>
+
+    <p>
+      Layer Export Helper — небольшой локальный компонент на вашем
+      компьютере. Он запускает конвертер только когда нужен экспорт.
+      Файлы передаются между Figma и Helper локально через
+      <b>localhost</b> и не отправляются на сторонний сервер.
+    </p>
+
+    <h3>macOS</h3>
+
+    <ol>
+      <li>Нажмите «Скачать ZIP».</li>
+      <li>Распакуйте архив.</li>
+      <li>Запустите Layer Export Helper.</li>
+      <li>
+        Если macOS блокирует первый запуск —
+        нажмите правой кнопкой по приложению → «Открыть».
+      </li>
+      <li>Вернитесь в Figma. Экспорт продолжится автоматически.</li>
+    </ol>
+
+    <h3>Windows</h3>
+
+    <ol>
+      <li>Нажмите «Скачать ZIP».</li>
+      <li>Распакуйте архив.</li>
+      <li>
+        Запустите Layer Export Helper.exe
+        или установщик из архива.
+      </li>
+      <li>
+        Разрешите запуск, если Windows покажет системное предупреждение.
+      </li>
+      <li>Вернитесь в Figma. Экспорт продолжится автоматически.</li>
+    </ol>
+
+    <p class="hint">
+      Helper требуется установить только один раз.
+      После этого плагин будет запускать локальный конвертер автоматически.
+    </p>
+
+    <div class="modal-actions" style="gap:8px">
+      <button id="install-helper-cancel" type="button">
+        Отмена
+      </button>
+
+      <button id="install-helper-confirm" type="button" class="primary">
+        Скачать ZIP
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- UI_SCRIPT -->
+<div
+    id="thanks-modal"
+    class="modal thanks-modal"
+    hidden
+  >
+    <div
+      class="modal-card thanks-card"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="thanks-title"
+    >
+
+      <button
+        id="thanks-close"
+        class="thanks-close"
+        type="button"
+        aria-label="Закрыть"
+      >×</button>
+
+      <h2 id="thanks-title">
+        Сказать спасибо
+      </h2>
+
+      <p class="thanks-text">
+        Если Layer Export оказался полезен и сэкономил вам время, можно поддержать разработку плагина.
+      </p>
+
+
+      <div class="thanks-methods">
+
+        <a
+          id="thanks-yoomoney"
+          class="thanks-method"
+          href="https://yoomoney.ru/to/4100119638206441"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span>ЮMoney</span>
+          <span class="thanks-arrow">→</span>
+        </a>
+
+
+        <div
+          id="thanks-ton"
+          class="thanks-ton"
+        >
+          <div class="thanks-ton-main">
+
+            <span class="thanks-ton-title">
+              TON / USDT (сеть TON)
+            </span>
+
+            <code
+              id="thanks-ton-address"
+              class="thanks-ton-address"
+              title="UQAIHIGV_89kVbDBvN5RRjWi8qAhmAFUZHgtCykVApLagldZ"
+            >UQAIHIGV_89kVbDBvN5RRjWi8qAhmAFUZHgtCykVApLagldZ</code>
+
+          </div>
+
+          <button
+            id="thanks-ton-copy"
+            class="thanks-ton-copy"
+            type="button"
+          >
+            Скопировать
+          </button>
+        </div>
+
+
+        <a
+          id="thanks-boosty"
+          class="thanks-method"
+          href="https://boosty.to/somedesignindeed"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span>Boosty</span>
+          <span class="thanks-arrow">→</span>
+        </a>
+
+      </div>
+
+
+      <div class="thanks-support">
+
+        <div class="thanks-support-title">
+          Вопросы и проблемы
+        </div>
+
+        <p class="thanks-support-text">
+          Если что-то не работает или есть вопрос по плагину — напишите на почту.
+        </p>
+
+        <a
+          class="thanks-email"
+          href="mailto:somedesignindeed@proton.me"
+        >
+          somedesignindeed@proton.me
+        </a>
+
+      </div>
+
+
+      <p class="thanks-note">
+        Любая поддержка помогает развивать плагин и выпускать обновления.
+      </p>
+
+    </div>
+  </div>
+</body>
+</html>
