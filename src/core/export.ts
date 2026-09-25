@@ -546,6 +546,119 @@ function hasPrintLayerDescendant(
   return false;
 }
 
+/* === REAL PRINT LAYER CHECK START === */
+
+/*
+ * Одного имени "rezka" недостаточно.
+ *
+ * Слой считается настоящим слоем резки,
+ * только если внутри него есть хотя бы один
+ * видимый Stroke с ненулевой толщиной.
+ */
+function hasVisibleStroke(
+  node: SceneNode,
+): boolean {
+
+  if (
+    node.visible ===
+      false
+  ) {
+    return false;
+  }
+
+  if (
+    'strokes' in node &&
+    Array.isArray(
+      node.strokes,
+    )
+  ) {
+    const strokeWeight =
+      'strokeWeight' in node &&
+      typeof node.strokeWeight ===
+        'number'
+        ? node.strokeWeight
+        : 1;
+
+    if (
+      strokeWeight > 0
+    ) {
+      for (
+        const paint
+        of node.strokes
+      ) {
+        if (
+          paint.visible !==
+            false &&
+          (
+            paint.opacity ===
+              undefined ||
+            paint.opacity > 0
+          )
+        ) {
+          return true;
+        }
+      }
+    }
+  }
+
+  for (
+    const child
+    of sceneChildren(
+      node,
+    )
+  ) {
+    if (
+      hasVisibleStroke(
+        child,
+      )
+    ) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+
+function hasUsablePrintLayerDescendant(
+  node: SceneNode,
+  layerName: string,
+): boolean {
+
+  for (
+    const child
+    of sceneChildren(
+      node,
+    )
+  ) {
+    if (
+      isPrintLayer(
+        child,
+        layerName,
+      ) &&
+      hasVisibleStroke(
+        child,
+      )
+    ) {
+      return true;
+    }
+
+    if (
+      hasUsablePrintLayerDescendant(
+        child,
+        layerName,
+      )
+    ) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+/* === REAL PRINT LAYER CHECK END === */
+
+
 function hidePrintLayerDescendants(
   node: SceneNode,
   layerName: string,
@@ -788,8 +901,50 @@ export async function exportSelection(
           'image/svg+xml',
       };
     } else {
+      const printLayerFound =
+        options.printLayerEnabled &&
+        hasPrintLayerDescendant(
+          node,
+          options.printLayerName,
+        );
+
+      const printLayerUsable =
+        printLayerFound &&
+        hasUsablePrintLayerDescendant(
+          node,
+          options.printLayerName,
+        );
+
+      /*
+       * Имя совпало, но настоящего Stroke нет.
+       *
+       * Это может быть совершенно обычный пользовательский
+       * слой, который просто случайно называется "rezka".
+       *
+       * Ничего не удаляем из artwork и не прерываем экспорт.
+       */
+      if (
+        printLayerFound &&
+        !printLayerUsable
+      ) {
+        const warning =
+          `Слой «${options.printLayerName}» найден во фрейме «${node.name}», но не содержит видимых Stroke. Он будет экспортирован как обычный слой. Контур резки не создан.`;
+
+        console.warn(
+          `[Layer Export] ${warning}`,
+        );
+
+        figma.ui.postMessage({
+          type:
+            'warning',
+
+          message:
+            warning,
+        });
+      }
+
       const rezkaSvgBytes =
-        options.printLayerEnabled
+        printLayerUsable
           ? await exportRezkaSvg(
               node,
               options.printLayerName,

@@ -5781,7 +5781,7 @@ html[lang="en"]
 
 /* ----------------------------------------------------------
    LEFT:
-   Сказать спасибо / Задать вопрос
+   Сказать спасибо
 
    То же оформление, что RU / EN.
    ---------------------------------------------------------- */
@@ -5908,6 +5908,205 @@ html[lang="en"]
 
 /* === HEADER SUPPORT FIX END === */
 
+
+
+/* === SELECTION LIST AUTO HEIGHT FIX START === */
+
+#tab-export #selection-list{
+  height:auto !important;
+  min-height:66px !important;
+  max-height:174px !important;
+
+  overflow-y:auto !important;
+  overflow-x:hidden !important;
+}
+
+/* === SELECTION LIST AUTO HEIGHT FIX END === */
+
+
+
+
+
+/* === UI FIX 2026-09-25 START === */
+
+
+/* ----------------------------------------------------------
+   TEXT TAB
+   ---------------------------------------------------------- */
+
+#tab-button-text{
+  width:92px !important;
+}
+
+
+/* ----------------------------------------------------------
+   LAYERS
+   scrollbar больше не отрезает правую часть кнопки
+   ---------------------------------------------------------- */
+
+#tab-layers .compact-page{
+  box-sizing:border-box !important;
+
+  width:
+    calc(100% - 14px)
+    !important;
+
+  max-width:
+    calc(100% - 14px)
+    !important;
+
+  padding-right:0 !important;
+}
+
+#tab-layers .compact-group{
+  box-sizing:border-box !important;
+
+  max-width:100% !important;
+}
+
+#tab-layers .compact-actions{
+  box-sizing:border-box !important;
+
+  width:100% !important;
+
+  padding-right:0 !important;
+}
+
+#tab-layers #rename-apply{
+  flex:0 0 auto !important;
+
+  margin-right:1px !important;
+}
+
+
+/* ----------------------------------------------------------
+   CENTERED PLUGIN WARNING
+   ---------------------------------------------------------- */
+
+#plugin-warning-toast{
+  position:fixed !important;
+
+  z-index:100000 !important;
+
+  left:50% !important;
+  bottom:16px !important;
+
+  transform:
+    translateX(-50%)
+    !important;
+
+  box-sizing:border-box !important;
+
+  width:
+    min(
+      520px,
+      calc(100% - 40px)
+    )
+    !important;
+
+  min-height:42px !important;
+
+  display:grid !important;
+
+  grid-template-columns:
+    minmax(0,1fr)
+    36px
+    !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  overflow:hidden !important;
+
+  border:0 !important;
+
+  border-radius:
+    11px
+    !important;
+
+  background:
+    #2B2B2B
+    !important;
+
+  color:
+    #fff
+    !important;
+
+  box-shadow:
+    0 4px 16px
+    rgba(0,0,0,.28)
+    !important;
+
+  font:
+    400 10px/1.4
+    Inter,
+    system-ui,
+    sans-serif
+    !important;
+}
+
+
+#plugin-warning-toast
+.plugin-warning-text{
+  box-sizing:border-box !important;
+
+  min-width:0 !important;
+
+  display:flex !important;
+
+  align-items:center !important;
+
+  padding:
+    9px
+    12px
+    !important;
+
+  overflow-wrap:anywhere !important;
+}
+
+
+#plugin-warning-toast
+.plugin-warning-close{
+  all:unset !important;
+
+  box-sizing:border-box !important;
+
+  display:flex !important;
+
+  align-items:center !important;
+  justify-content:center !important;
+
+  width:36px !important;
+  height:100% !important;
+
+  border-left:
+    1px solid
+    rgba(255,255,255,.15)
+    !important;
+
+  color:#fff !important;
+
+  font:
+    300 19px/1
+    Inter,
+    system-ui,
+    sans-serif
+    !important;
+
+  cursor:pointer !important;
+}
+
+
+#plugin-warning-toast
+.plugin-warning-close:hover{
+  background:
+    rgba(255,255,255,.07)
+    !important;
+}
+
+
+/* === UI FIX 2026-09-25 END === */
+
 </style>
 </head>
 
@@ -5932,13 +6131,6 @@ html[lang="en"]
           type="button"
         >Сказать спасибо</button>
 
-        <span>/</span>
-
-        <a
-          id="question-button"
-          href="mailto:somedesignindeed@proton.me"
-          target="_blank"
-        >Задать вопрос</a>
       </div>
 <div
         id="language-switch"
@@ -5990,7 +6182,7 @@ html[lang="en"]
     <path fill-rule="evenodd" clip-rule="evenodd" d="M219.548 6.00961V6.73076H218.106V18.2692H219.548V18.9904L218.106 18.9903V18.9904H217.385L217.385 18.9903L215.942 18.9904V18.2692L217.385 18.2692V6.73076H215.942V6.00961H219.548ZM221.712 8.17307V16.8269H218.827V15.3846H220.269V9.61539H218.827V8.17307H221.712ZM216.663 8.17307V16.8269H207.288V8.17307H216.663ZM213.346 9.03846H212.337V13.9423C212.337 14.393 212.308 14.6747 212.287 14.9459L212.284 14.982L212.282 15.018C212.272 15.1563 212.264 15.2955 212.264 15.4567H213.274V14.8077C213.405 15.0343 213.595 15.2211 213.823 15.3481C214.052 15.4752 214.311 15.5376 214.572 15.5288C214.807 15.5323 215.039 15.4821 215.252 15.3821C215.464 15.2821 215.651 15.135 215.798 14.9519C216.184 14.4265 216.41 13.8002 216.447 13.149C216.447 11.7789 215.726 10.8413 214.644 10.8413C214.393 10.8424 214.144 10.9016 213.919 11.0142C213.694 11.1267 213.498 11.2897 213.346 11.4904V9.03846ZM211.327 11.4904C211.135 11.2854 210.899 11.1268 210.636 11.0269C210.374 10.9269 210.092 10.8881 209.813 10.9135C209.238 10.8938 208.668 11.0178 208.154 11.274L208.442 11.9952C208.823 11.7951 209.24 11.6725 209.668 11.6346C209.804 11.6198 209.942 11.6357 210.072 11.6812C210.201 11.7267 210.318 11.8006 210.415 11.8975C210.512 11.9944 210.586 12.1117 210.631 12.241C210.677 12.3702 210.693 12.508 210.678 12.6442V12.7163H209.957C209.513 12.692 209.07 12.7659 208.659 12.9327C208.424 13.034 208.227 13.2075 208.098 13.4279C207.968 13.6483 207.912 13.9042 207.938 14.1587C207.935 14.3423 207.972 14.5243 208.046 14.6926C208.119 14.8608 208.228 15.0114 208.365 15.1343C208.501 15.2572 208.662 15.3495 208.837 15.4051C209.013 15.4607 209.197 15.4783 209.38 15.4567C209.637 15.4705 209.894 15.4257 210.131 15.3258C210.369 15.2258 210.58 15.0734 210.75 14.8798V15.3846H211.687C211.625 15.0033 211.601 14.6168 211.615 14.2308V12.9327C211.683 12.4332 211.581 11.9254 211.327 11.4904ZM210.606 13.2211V14.0865C210.505 14.2704 210.36 14.4262 210.184 14.5396C210.007 14.653 209.805 14.7203 209.596 14.7356C209.509 14.742 209.422 14.7297 209.34 14.6993C209.259 14.669 209.184 14.6214 209.123 14.5598C209.061 14.4982 209.014 14.424 208.983 14.3423C208.953 14.2607 208.941 14.1734 208.947 14.0865C208.947 13.5817 209.308 13.2933 210.173 13.2211H210.606ZM214.356 11.6346C214.933 11.6346 215.365 12.2115 215.365 13.149C215.365 14.0865 215.005 14.6635 214.428 14.6635C214.198 14.6585 213.974 14.588 213.782 14.4603C213.591 14.3326 213.439 14.1529 213.346 13.9423V12.3558C213.445 12.1642 213.589 11.999 213.764 11.8736C213.94 11.7483 214.142 11.6664 214.356 11.6346Z" fill="currentColor"/>
   </svg>
 </span>
-<span>Переименование</span>
+<span>Текст</span>
 </button>
 
       <button
@@ -7783,7 +7975,7 @@ rm -rf ~/Library/Application\ Support/Layer\ Export</pre>
       </h2>
 
       <p class="thanks-text">
-        Если Layer Export оказался полезен и сэкономил вам время, можно поддержать разработку плагина.
+        Если Export to PDF / SVG + Batch Rename оказался полезен и сэкономил вам время, можно поддержать разработку плагина.
       </p>
 
 

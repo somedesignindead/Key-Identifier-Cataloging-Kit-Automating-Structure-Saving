@@ -39,6 +39,9 @@ const RU_EN_SOURCE:
   'Переименование':
     'Renaming',
 
+  'Текст':
+    'Text',
+
   'Изображения':
     'Images',
 
@@ -1019,8 +1022,8 @@ const THANKS_RU_EN:
   'Задать вопрос':
     'Ask a question',
 
-  'Если Layer Export оказался полезен и сэкономил вам время, можно поддержать разработку плагина.':
-    'If Layer Export has been useful and saved you time, you can support the development of the plugin.',
+  'Если Export to PDF / SVG + Batch Rename оказался полезен и сэкономил вам время, можно поддержать разработку плагина.':
+    'If Export to PDF / SVG + Batch Rename has been useful and saved you time, you can support the development of the plugin.',
 
   'TON / USDT (сеть TON)':
     'TON / USDT (TON network)',
@@ -1456,7 +1459,7 @@ function userContentNode(
 
   return Boolean(
     parent.closest(
-      '.selection-name, a.download, .brand-title, .brand-subtitle',
+      'script, style, template, noscript, .selection-name, a.download, .brand-title, .brand-subtitle',
     ),
   );
 }
@@ -1660,6 +1663,15 @@ function translateElementAttributes(
 function applySubtree(
   root: Node,
 ): void {
+
+  if (
+    root instanceof Element &&
+    root.matches(
+      'script, style, template, noscript',
+    )
+  ) {
+    return;
+  }
 
   if (
     root.nodeType ===
@@ -1945,7 +1957,18 @@ function auditEnglishUi(): void {
       '[i18n] Untranslated UI strings:',
       [
         ...missing,
-      ],
+      ]
+        .slice(
+          0,
+          30,
+        )
+        .map(
+          value =>
+            value.slice(
+              0,
+              300,
+            ),
+        ),
     );
   }
 }
@@ -2085,10 +2108,6 @@ export function initI18n():
         }
 
 
-        window.setTimeout(
-          auditEnglishUi,
-          0,
-        );
       },
     );
 

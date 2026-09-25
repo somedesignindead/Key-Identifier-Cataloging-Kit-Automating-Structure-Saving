@@ -26,6 +26,7 @@ import {
   downloadHelper,
 } from './ui/helper';
 
+
 const el = <T extends HTMLElement = HTMLElement>(id: string) =>
   document.getElementById(id) as T;
 
@@ -127,6 +128,119 @@ function setRadio(name: string, value: string): void {
 function send(message: UiMessage): void {
   parent.postMessage({ pluginMessage: message }, '*');
 }
+
+/* === PLUGIN WARNING TOAST START === */
+
+let pluginWarningTimer:
+  number |
+  undefined;
+
+
+function hidePluginWarning():
+  void {
+
+  if (
+    pluginWarningTimer !==
+    undefined
+  ) {
+    window.clearTimeout(
+      pluginWarningTimer,
+    );
+
+    pluginWarningTimer =
+      undefined;
+  }
+
+  document
+    .getElementById(
+      'plugin-warning-toast',
+    )
+    ?.remove();
+}
+
+
+function showPluginWarning(
+  message: string,
+): void {
+
+  hidePluginWarning();
+
+  const toast =
+    document.createElement(
+      'div',
+    );
+
+  toast.id =
+    'plugin-warning-toast';
+
+  toast.setAttribute(
+    'role',
+    'status',
+  );
+
+  toast.setAttribute(
+    'aria-live',
+    'polite',
+  );
+
+
+  const text =
+    document.createElement(
+      'div',
+    );
+
+  text.className =
+    'plugin-warning-text';
+
+  text.textContent =
+    message;
+
+
+  const close =
+    document.createElement(
+      'button',
+    );
+
+  close.type =
+    'button';
+
+  close.className =
+    'plugin-warning-close';
+
+  close.setAttribute(
+    'aria-label',
+    'Закрыть',
+  );
+
+  close.textContent =
+    '×';
+
+  close.addEventListener(
+    'click',
+    hidePluginWarning,
+  );
+
+
+  toast.append(
+    text,
+    close,
+  );
+
+  document.body.append(
+    toast,
+  );
+
+
+  pluginWarningTimer =
+    window.setTimeout(
+      hidePluginWarning,
+      9000,
+    );
+}
+
+/* === PLUGIN WARNING TOAST END === */
+
+
 
 function options(): ExportOptions {
   return {
@@ -1771,6 +1885,14 @@ window.addEventListener(
 
         break;
 
+      case 'warning':
+        showPluginWarning(
+          message.message,
+        );
+
+        break;
+
+
       case 'exported-file':
         void handleExportedFile(
           message.file,
@@ -2064,6 +2186,71 @@ document.addEventListener(
     }
   },
 );
+
+
+
+/* === TOOLTIP STALE HIDE FIX START === */
+
+/*
+ * pointerout иногда может быть потерян Chromium/Figma,
+ * например при изменении DOM или фокуса.
+ *
+ * Поэтому дополнительно проверяем реальное положение
+ * указателя на каждом pointermove.
+ */
+document.addEventListener(
+  'pointermove',
+  event => {
+
+    const eventTarget =
+      event.target;
+
+    const help =
+      eventTarget instanceof Element
+        ? eventTarget.closest(
+            '.help[data-tip]',
+          )
+        : null;
+
+    if (
+      !help &&
+      !refTooltip.hidden
+    ) {
+      hideRefTooltip();
+    }
+  },
+  true,
+);
+
+
+/*
+ * Любое действие, при котором hover уже нельзя считать
+ * актуальным, закрывает tooltip.
+ */
+window.addEventListener(
+  'blur',
+  hideRefTooltip,
+);
+
+document.addEventListener(
+  'scroll',
+  hideRefTooltip,
+  true,
+);
+
+document.addEventListener(
+  'pointercancel',
+  hideRefTooltip,
+  true,
+);
+
+document.addEventListener(
+  'pointerdown',
+  hideRefTooltip,
+  true,
+);
+
+/* === TOOLTIP STALE HIDE FIX END === */
 
 
 sync();
@@ -3385,7 +3572,11 @@ el<HTMLSelectElement>(
 ).addEventListener(
   'change',
   () => {
-    syncRenameMode();
+
+
+
+
+syncRenameMode();
     scheduleRenamePreview();
   },
 );

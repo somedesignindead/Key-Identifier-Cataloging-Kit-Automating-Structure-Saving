@@ -171,6 +171,8 @@ export type ExportedFile = {
   textSvgBytes?: Uint8Array;
   rezkaSvgBytes?: Uint8Array;
 
+  warning?: string;
+
   sourceWidth?: number;
   sourceHeight?: number;
 };
@@ -214,6 +216,10 @@ export type PluginMessage =
     }
   | {
       type: 'error';
+      message: string;
+    }
+  | {
+      type: 'warning';
       message: string;
     };
 
@@ -380,7 +386,19 @@ function isExportedFile(
         undefined ||
       file.rezkaSvgBytes instanceof
         Uint8Array
-    ) &&
+    )
+    &&
+    (
+      file.warning ===
+        undefined ||
+      (
+        typeof file.warning ===
+          'string' &&
+        file.warning.length <=
+          500
+      )
+    )
+ &&
     (
       file.sourceWidth ===
         undefined ||
@@ -878,6 +896,18 @@ export function isPluginMessage(
   ) {
     return typeof v.message ===
       'string';
+  }
+
+
+  if (
+    v.type === 'warning'
+  ) {
+    return (
+      typeof v.message ===
+        'string' &&
+      v.message.length <=
+        1000
+    );
   }
 
   if (
