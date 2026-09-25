@@ -14,5 +14,6 @@
     ],
     "reasoning": "The plugin communicates with the optional Layer Export Helper running locally on the user's computer for PDF and CMYK export and conversion. No data is sent to external servers or third-party services.",
     "devAllowedDomains": []
-  }
+  },
+  "id": "1685392823872065649"
 }
