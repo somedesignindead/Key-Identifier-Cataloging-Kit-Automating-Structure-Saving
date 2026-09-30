@@ -349,9 +349,34 @@ async function optimizeImageFills(
                 continue;
               }
 
-              const size =
-                await image
-                  .getSizeAsync();
+              let size: {
+                width: number;
+                height: number;
+              };
+
+              try {
+                size =
+                  await image
+                    .getSizeAsync();
+              } catch (
+                error
+              ) {
+                /*
+                 * Оптимизация изображений — необязательный этап.
+                 * Некоторые bitmap в Figma могут существовать,
+                 * но getSizeAsync() для них возвращает
+                 * "Image dimensions not available".
+                 *
+                 * В таком случае оставляем исходное изображение
+                 * как есть и продолжаем экспорт.
+                 */
+                console.warn(
+                  '[Layer Export] Image optimization skipped: dimensions unavailable.',
+                  error,
+                );
+
+                continue;
+              }
 
               if (
                 size.width <= 0 ||
@@ -1291,15 +1316,84 @@ figma.ui.onmessage =
         } catch (
           error
         ) {
+          console.error(
+            '[Layer Export] export failed:',
+            error,
+          );
+
+          let message =
+            'Ошибка экспорта.';
+
+          if (
+            error instanceof
+              Error &&
+            error.message
+          ) {
+            message =
+              error.message;
+          } else if (
+            typeof error ===
+              'string' &&
+            error.trim()
+          ) {
+            message =
+              error;
+          } else if (
+            error &&
+            typeof error ===
+              'object'
+          ) {
+            const value =
+              error as {
+                name?: unknown;
+                message?: unknown;
+              };
+
+            if (
+              typeof value.message ===
+                'string' &&
+              value.message.trim()
+            ) {
+              message =
+                typeof value.name ===
+                  'string' &&
+                value.name &&
+                value.name !==
+                  'Error'
+                  ? `${value.name}: ${value.message}`
+                  : value.message;
+            } else {
+              try {
+                const serialized =
+                  JSON.stringify(
+                    error,
+                  );
+
+                if (
+                  serialized &&
+                  serialized !== '{}'
+                ) {
+                  message =
+                    serialized;
+                } else {
+                  message =
+                    `Ошибка экспорта: ${String(error)}`;
+                }
+              } catch {
+                message =
+                  `Ошибка экспорта: ${String(error)}`;
+              }
+            }
+          } else {
+            message =
+              `Ошибка экспорта: ${String(error)}`;
+          }
+
           figma.ui.postMessage({
             type:
               'error',
 
-            message:
-              error instanceof
-                Error
-                ? error.message
-                : 'Ошибка экспорта.',
+            message,
           });
         }
 
